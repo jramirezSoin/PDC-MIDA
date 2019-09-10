@@ -9,7 +9,7 @@ import java.util.List;
  */
 public enum Modality {
 
-	POSPAID(), PREPAID(), HYBRID(), HORARY;
+	POSPAID(), PREPAID(), HYBRID(), HORARY(), CCM(), CCF;
 
 	public ServiceType SMS, TEL;
 
@@ -33,6 +33,10 @@ public enum Modality {
 			return Modality.POSPAID;
 		case "HOR":
 			return Modality.HORARY;
+		case "CCF":
+			return Modality.CCF;
+		case "CCM":
+			return Modality.CCM;		
 		default:
 			break;
 		}
@@ -50,6 +54,10 @@ public enum Modality {
 				listOfResultName.add(resultName);
 			if(this.equals(Modality.HORARY) && resultName.isHorary && resultName.applyServiceType(serviceType))
 				listOfResultName.add(resultName);
+			if(this.equals(Modality.CCF) && resultName.isCCFixed && resultName.applyServiceType(serviceType))
+				listOfResultName.add(resultName);
+			if(this.equals(Modality.CCM) && resultName.isCCMobile && resultName.applyServiceType(serviceType))
+				listOfResultName.add(resultName);
 		}
 		return listOfResultName;
 	}
@@ -63,22 +71,28 @@ public enum Modality {
 			return true;
 		if(this.equals(Modality.HORARY) && resultName.isHorary)
 			return true;
+		if(this.equals(Modality.CCF) && resultName.isCCFixed)
+			return true;
+		if(this.equals(Modality.CCM) && resultName.isCCMobile)
+			return true;
 		return false;
 	}
 
 	public enum ResultName {
 		//TEL
-		PRE_IC_VOZ_ONNET_900XXXX("900", "TelcoGsmTelephony", false, true, true, true, true, false, ""), 
-		PRE_IC_VOZ_FIJO_CC_ESPECIALES_900XXXX("10", "TelcoGsmTelephony", false, true, false, false, true, false, ""), 
-		PRE_IC_VOZ_MOVIL_CC_ESPECIALES_900XXXX("11", "TelcoGsmTelephony", false, true, false, false, true, false, ""),
+		PRE_IC_VOZ_ONNET_900XXXX("900", "TelcoGsmTelephony", false, true, true, true, true, false,false,false, ""), 
+		PRE_IC_VOZ_FIJO_CC_ESPECIALES_900XXXX("10", "TelcoGsmTelephony", false, true, false, false, true, false,false,false, ""), 
+		PRE_IC_VOZ_MOVIL_CC_ESPECIALES_900XXXX("11", "TelcoGsmTelephony", false, true, false, false, true, false,false,false, ""),
 		//SMS
-		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true, "MT"), 
-		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true, "MO");
+		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MT"), 
+		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MO");
+		//MIDA
+		PRE_IC_MIDA_XXX_XX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true, "");
 		
 		public String originPrefix, productName, group;
-		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary;
+		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary, isCCFixed, isCCMobile;
 
-		private ResultName(String originPrefix, String productName, Boolean isPospaid, Boolean isPrepaid, Boolean isHybrid, Boolean isHorary, Boolean isTel, Boolean isSms, String group) {
+		private ResultName(String originPrefix, String productName, Boolean isPospaid, Boolean isPrepaid, Boolean isHybrid, Boolean isHorary, Boolean isTel, Boolean isSms, Boolean isCCFixed, Boolean isCCMobile, String group) {
 			this.originPrefix = originPrefix;
 			this.productName = productName;
 			this.isPospaid = isPospaid;
@@ -88,6 +102,8 @@ public enum Modality {
 			this.isTel = isTel;
 			this.isSms = isSms;
 			this.group = group;
+			this.isCCFixed = isCCFixed;
+			this.isCCMobile = isCCMobile;
 		}
 		
 		public Boolean applyServiceType(ServiceType serviceType) {
