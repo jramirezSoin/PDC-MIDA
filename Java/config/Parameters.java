@@ -76,6 +76,24 @@ public final class Parameters {
     public static String XML_CONFIG_CHARGES_TEL_HYB_HORARIO="";
     public static String XML_CONFIG_SELECTOR_SMS_HYB="";
     public static String XML_CONFIG_SELECTOR_TEL_HYB="";
+
+    //CONFIG MIDA
+    public static String PDC_CONFIG_ZONNING_TEL_PRE_MIDA="";
+    public static String PDC_CONFIG_ZONNING_TEL_CCF_MIDA="";
+    public static String PDC_CONFIG_ZONNING_TEL_CCM_MIDA="";
+    public static String PDC_CONFIG_ZONNING_TEL_HIB_MIDA="";
+    public static String PDC_CONFIG_CHARGES_TEL_PRE_MIDA="";
+    public static String PDC_CONFIG_CHARGES_TEL_CCF_MIDA="";
+    public static String PDC_CONFIG_CHARGES_TEL_CCM_MIDA="";
+    public static String PDC_CONFIG_CHARGES_TEL_HIB_MIDA="";
+    public static String XML_CONFIG_ZONNING_TEL_PRE_MIDA="";
+    public static String XML_CONFIG_ZONNING_TEL_CCF_MIDA="";
+    public static String XML_CONFIG_ZONNING_TEL_CCM_MIDA="";
+    public static String XML_CONFIG_ZONNING_TEL_HIB_MIDA="";
+    public static String XML_CONFIG_CHARGES_TEL_PRE_MIDA="";
+    public static String XML_CONFIG_CHARGES_TEL_CCF_MIDA="";
+    public static String XML_CONFIG_CHARGES_TEL_CCM_MIDA="";
+    public static String XML_CONFIG_CHARGES_TEL_HIB_MIDA="";
     
     
     public static final int ERR_INVALID_VALUE=1; 
@@ -201,7 +219,15 @@ public final class Parameters {
         PDC_CONFIG_CHARGES_TEL_HYB=confFile.getString("pdc.config.charges.tel.hib").trim();
         PDC_CONFIG_CHARGES_TEL_HYB_HORARIO=confFile.getString("pdc.config.charges.tel.hib.horario").trim();
         
-        
+        PDC_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("pdc.config.zonning.tel.pre.mida").trim();
+        PDC_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("pdc.config.zonning.tel.ccf.mida").trim();
+        PDC_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("pdc.config.zonning.tel.ccm.mida").trim();
+        PDC_CONFIG_ZONNING_TEL_HIB_MIDA=confFile.getString("pdc.config.zonning.tel.hib.mida").trim();
+        PDC_CONFIG_CHARGES_TEL_PRE_MIDA=confFile.getString("pdc.config.charges.tel.pre.mida").trim();
+        PDC_CONFIG_CHARGES_TEL_CCF_MIDA=confFile.getString("pdc.config.charges.tel.ccf.mida").trim();
+        PDC_CONFIG_CHARGES_TEL_CCM_MIDA=confFile.getString("pdc.config.charges.tel.ccm.mida").trim();
+        PDC_CONFIG_CHARGES_TEL_HIB_MIDA=confFile.getString("pdc.config.charges.tel.hib.mida").trim();
+
         DEFAULT_PRICE_MINUTE = Double.parseDouble(confFile.getString("default.price.minute.pre").trim());
         DEFAULT_PRICE_SMS = Double.parseDouble(confFile.getString("default.price.sms.pre").trim());
     }
@@ -238,6 +264,15 @@ public final class Parameters {
         XML_CONFIG_CHARGES_TEL_HYB_HORARIO=confFile.getString("xml.config.charges.tel.hib.horario").trim();
         XML_CONFIG_SELECTOR_SMS_HYB=confFile.getString("xml.config.selector.sms.hib").trim();
         XML_CONFIG_SELECTOR_TEL_HYB=confFile.getString("xml.config.selector.tel.hib").trim();
+
+        XML_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("xml.config.zonning.tel.pre.mida").trim();
+        XML_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("xml.config.zonning.tel.ccf.mida").trim();
+        XML_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("xml.config.zonning.tel.ccm.mida").trim();
+        XML_CONFIG_ZONNING_TEL_HIB_MIDA=confFile.getString("xml.config.zonning.tel.hib.mida").trim();
+        XML_CONFIG_CHARGES_TEL_PRE_MIDA=confFile.getString("xml.config.charges.tel.pre.mida").trim();
+        XML_CONFIG_CHARGES_TEL_CCF_MIDA=confFile.getString("xml.config.charges.tel.ccf.mida").trim();
+        XML_CONFIG_CHARGES_TEL_CCM_MIDA=confFile.getString("xml.config.charges.tel.ccm.mida").trim();
+        XML_CONFIG_CHARGES_TEL_HIB_MIDA=confFile.getString("xml.config.charges.tel.hib.mida").trim();
     }
     
     public static boolean isParametersLoaded() {
