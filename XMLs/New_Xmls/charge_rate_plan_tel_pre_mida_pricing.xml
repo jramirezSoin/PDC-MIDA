@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><pdc:PricingObjectsJXB xmlns:pdc="http://xmlns.oracle.com/communications/platform/model/pricing"><chargeRatePlan xmlns:pdc="http://xmlns.oracle.com/communications/platform/model/pricing">
+    <name>PRE_CRP_VOZ_PLAN_BASICO_PREPAGO_ROAMING_MIDA_USD</name>
+    <pricingProfileName>Convergent Usage</pricingProfileName>
+    <priceListName>Default</priceListName>
+    <applicableRums>DUR</applicableRums>
+    <applicableQuantity>ORIGINAL</applicableQuantity>
+    <taxTime>NONE</taxTime>
+    <todMode>START_TIME</todMode>
+    <applicableQtyTreatment>CONTINUOUS</applicableQtyTreatment>
+    <permittedName>TelcoGsmTelephony</permittedName>
+    <permittedType>PRODUCT</permittedType>
+    <eventName>EventDelayedSessionTelcoIcePrepaidGsm</eventName>
+    <cycleFeeFlag>0</cycleFeeFlag>
+    <billOffset>0</billOffset>
+    <subscriberCurrency>
+        <currencyCode>USD</currencyCode>
+        <applicableRum>
+            <applicableRumName>DUR</applicableRumName>
+            <minQuantity>0.0</minQuantity>
+            <minQuantityUnit>NONE</minQuantityUnit>
+            <incrementQuantity>1.0</incrementQuantity>
+            <incrementQuantityUnit>NONE</incrementQuantityUnit>
+            <roundingMode>NEAREST</roundingMode>
+            <crpRelDateRange>
+                <absoluteDateRange>
+                    <startDate>20190829T000000</startDate>
+                    <endDate>inf</endDate>
+                </absoluteDateRange>
+                  <zoneModel>
+                     <zoneModelName>PRE_ZM_VOZ_MIDA</zoneModelName>
+
+                  </zoneModel>
+            </crpRelDateRange>
+        </applicableRum>
+    </subscriberCurrency>
+</chargeRatePlan></pdc:PricingObjectsJXB>
