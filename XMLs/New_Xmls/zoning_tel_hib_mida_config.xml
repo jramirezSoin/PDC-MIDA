@@ -3,4 +3,44 @@
     <description>HIB_ZM_VOZ_MIDA</description>
     <priceListName>Default</priceListName>
     <obsolete>false</obsolete>
+     <zoneItem>
+        <productName>TelcoGsmTelephony</productName>
+        <originPrefix>02</originPrefix>
+        <destinationPrefix>0061</destinationPrefix>
+        <validFrom>20190829T000000</validFrom>
+        <validTo>inf</validTo>
+        <zoneResult>
+            <zoneName>PRE_IC_MIDA_AUS_61</zoneName>
+        </zoneResult>
+    </zoneItem>
+      <zoneItem>
+        <productName>TelcoGsmTelephony</productName>
+        <originPrefix>02</originPrefix>
+        <destinationPrefix>0043</destinationPrefix>
+        <validFrom>20190829T000000</validFrom>
+        <validTo>inf</validTo>
+        <zoneResult>
+            <zoneName>PRE_IC_MIDA_AUT_43</zoneName>
+        </zoneResult>
+    </zoneItem>
+      <zoneItem>
+        <productName>TelcoGsmTelephony</productName>
+        <originPrefix>02</originPrefix>
+        <destinationPrefix>0032</destinationPrefix>
+        <validFrom>20190829T000000</validFrom>
+        <validTo>inf</validTo>
+        <zoneResult>
+            <zoneName>PRE_IC_MIDA_BEL_32</zoneName>
+        </zoneResult>
+    </zoneItem>
+      <zoneItem>
+        <productName>TelcoGsmTelephony</productName>
+        <originPrefix>02</originPrefix>
+        <destinationPrefix>0041</destinationPrefix>
+        <validFrom>20190829T000000</validFrom>
+        <validTo>inf</validTo>
+        <zoneResult>
+            <zoneName>PRE_IC_MIDA_CHE_41</zoneName>
+        </zoneResult>
+    </zoneItem>
 </standardZoneModel></cim:ConfigObjects>
