@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cim:ConfigObjects xmlns:cim="http://xmlns.oracle.com/communications/platform/model/Config"><standardZoneModel xmlns:mtd="http://xmlns.oracle.com/communications/platform/model/Metadata" xmlns:cim="http://xmlns.oracle.com/communications/platform/model/Config" xmlns:pdc="http://xmlns.oracle.com/communications/platform/model/pricing">
+    <name>PRE_ZM_VOZ_CALLING_CARD_MOVIL</name>
+    <description>PRE_ZM_VOZ_CALLING_CARD_MOVIL</description>
+    <priceListName>Default</priceListName>
+    <obsolete>false</obsolete>
+</standardZoneModel></cim:ConfigObjects>

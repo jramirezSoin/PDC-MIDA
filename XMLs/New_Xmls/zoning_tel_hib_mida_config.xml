@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cim:ConfigObjects xmlns:cim="http://xmlns.oracle.com/communications/platform/model/Config"><standardZoneModel xmlns:mtd="http://xmlns.oracle.com/communications/platform/model/Metadata" xmlns:cim="http://xmlns.oracle.com/communications/platform/model/Config" xmlns:pdc="http://xmlns.oracle.com/communications/platform/model/pricing">
+    <name>HIB_ZM_VOZ_MIDA</name>
+    <description>HIB_ZM_VOZ_MIDA</description>
+    <priceListName>Default</priceListName>
+    <obsolete>false</obsolete>
+</standardZoneModel></cim:ConfigObjects>
