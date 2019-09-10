@@ -3,4 +3,44 @@
     <description>PRE_ZM_VOZ_MIDA</description>
     <priceListName>Default</priceListName>
     <obsolete>false</obsolete>
+    <zoneItem>
+      <productName>TelcoGsmTelephony</productName>
+      <originPrefix>02</originPrefix>
+      <destinationPrefix>00808</destinationPrefix>
+      <validFrom>20190829T000000</validFrom>
+      <validTo>inf</validTo>
+      <zoneResult>
+        <zoneName>PRE_IC_MIDA_WAK_808</zoneName>
+      </zoneResult>
+    </zoneItem>
+    <zoneItem>
+      <productName>TelcoGsmTelephony</productName>
+      <originPrefix>02</originPrefix>
+      <destinationPrefix>00678</destinationPrefix>
+      <validFrom>20190829T000000</validFrom>
+      <validTo>inf</validTo>
+      <zoneResult>
+        <zoneName>PRE_IC_MIDA_VUT_678</zoneName>
+      </zoneResult>
+    </zoneItem>
+    <zoneItem>
+      <productName>TelcoGsmTelephony</productName>
+      <originPrefix>02</originPrefix>
+      <destinationPrefix>00681</destinationPrefix>
+      <validFrom>20190829T000000</validFrom>
+      <validTo>inf</validTo>
+      <zoneResult>
+        <zoneName>PRE_IC_MIDA_WLF_681</zoneName>
+      </zoneResult>
+    </zoneItem>
+    <zoneItem>
+      <productName>TelcoGsmTelephony</productName>
+      <originPrefix>02</originPrefix>
+      <destinationPrefix>00967</destinationPrefix>
+      <validFrom>20190829T000000</validFrom>
+      <validTo>inf</validTo>
+      <zoneResult>
+        <zoneName>PRE_IC_MIDA_YEM_967</zoneName>
+      </zoneResult>
+    </zoneItem>
 </standardZoneModel></cim:ConfigObjects>
