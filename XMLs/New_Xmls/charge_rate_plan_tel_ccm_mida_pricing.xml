@@ -108,7 +108,7 @@
                                         <priceTierRange>
                                             <upperBound>NO_MAX</upperBound>
                                             <scaledCharge>
-                                                <price>06.0</price>
+                                                <price>13.0</price>
                                                 <unitOfMeasure>MINUTES</unitOfMeasure>
                                                 <balanceElementNumCode>840</balanceElementNumCode>
                                                 <discountable>true</discountable>
