@@ -55,7 +55,7 @@ rm XML_Marcacion_$1.xml
 
 
 #Chequea parametros de entrada
-if [[ $# -ne 4 ]]
+if [[ $# -ne 6 ]]
 then
  echo "El numero de parametros es incorrecto"
  exit 1

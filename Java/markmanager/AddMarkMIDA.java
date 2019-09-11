@@ -8,10 +8,12 @@ import java.util.List;
 
 import log.Logger;
 import brmHandlers.XmlUtils;
+import brmHandlers.XmlUtilsByModality;
 
 import config.Parameters;
 import cust.ZoneItem;
 import database.DBManager;
+import Modality;
 
 public class AddMarkMIDA {
 
@@ -19,26 +21,32 @@ public class AddMarkMIDA {
         Parameters.loadParameters();
         Logger.setName("AddMarkMIDA");
 		Logger.log(Logger.Debug, "Creacion de destino internacional");
-		if (args.length < 4) {
+		if (args.length < 6) {
             Logger.screen(Logger.Error, "Parametros insuficientes");
             System.exit(Parameters.ERR_INVALID_VALUE);
 		}
 		HashMap<String, List<ZoneItem>>  zoneDestins = XmlUtils.getAllZoneInternationalDestins();
 		Statement stmt;
-		String destin = args[0];
-		String zoneName = args[3];
+		
+		Modality modality = Modality.getModality(args[0]);
+		String destinationPrefix = args[1];
+		String pais_code = args[2];
+		String validFrom = args[3];
+		String price = args[4];
+		String priceAd = args[5];
+		String zoneName = pais_code + "_" + destinationPrefix;
+
         try {
 			stmt = DBManager.getConnectionIfw().createStatement();
 			ResultSet destinsIfw;
-			if (zoneDestins.containsKey(destin)) {
-				Logger.screen(Logger.Error, "La Marcacion destino "+destin+" que intenta configurar ya existe para el servicio TEL, proceso cancelado");
+			if (zoneDestins.containsKey(destinationPrefix)) {
+				Logger.screen(Logger.Error, "La Marcacion destino "+ destinationPrefix +" que intenta configurar ya existe para el servicio TEL, proceso cancelado");
 	            System.exit(Parameters.ERR_INVALID_VALUE);
 			}
-			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destin+"'");
+			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
 			destinsIfw.next();
 			String description = destinsIfw.getString(1);
-			//cambiar
-			XmlUtils.addZoneItem("TelcoGsmTelephony", zoneName, "19800101", "inf", "00"+destin, description);
+			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", destinationPrefix, null);
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
