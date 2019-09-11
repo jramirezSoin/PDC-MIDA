@@ -7,17 +7,24 @@ cmdExec="markmanager.ReportMarkMida"
 cmd="$JAVA_8_HOME/bin/java -cp "$cmdClassPath" "$cmdExec
 
 cd $dirBase
-if [[ $# -lt 1 ]]; then
-	echo "Parametros insuficientes"
-	echo "Modo de uso: ./consulta_marcacion_mida.sh <Destino Internacional>"
-	exit 1
+if [[ $# -e 0 ]]; then
+	$cmd $1
+		if [[ $? -ne 0 ]]; then
+			echo "Codigo de retorno: ERROR" >> bitacora.txt
+			echo "Codigo de retorno: ERROR"
+		else
+			echo "Codigo de retorno: OK" >> bitacora.txt
+			echo "Codigo de retorno: OK"
+		fi
+fi
+if [[ $# -gt 0 ]]; then
+	$cmd $1
+		if [[ $? -ne 0 ]]; then
+			echo "Codigo de retorno: ERROR" >> bitacora.txt
+			echo "Codigo de retorno: ERROR"
+		else
+			echo "Codigo de retorno: OK" >> bitacora.txt
+			echo "Codigo de retorno: OK"
+		fi
 fi
 
-$cmd $1
-	if [[ $? -ne 0 ]]; then
-		echo "Codigo de retorno: ERROR" >> bitacora.txt
-		echo "Codigo de retorno: ERROR"
-	else
-		echo "Codigo de retorno: OK" >> bitacora.txt
-		echo "Codigo de retorno: OK"
-	fi

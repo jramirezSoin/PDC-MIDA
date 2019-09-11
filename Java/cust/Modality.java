@@ -87,7 +87,7 @@ public enum Modality {
 		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MT"), 
 		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MO");
 		//MIDA
-		PRE_IC_MIDA_XXX_XX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true, "");
+		//PRE_IC_MIDA_XXX_XX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true, "");
 		
 		public String originPrefix, productName, group;
 		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary, isCCFixed, isCCMobile;

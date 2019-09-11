@@ -830,7 +830,7 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "delPriceTierRange() - Fin");
 		return deleted;
 	}
-	
+
 	public static HashMap<String, List<ZoneItem>> getAllZoneItems(Modality modality, ServiceType serviceType) {
 		return getAllZoneItems(modality,serviceType,false);
 	}
@@ -838,7 +838,7 @@ public class XmlUtilsByModality {
 	public static HashMap<String, List<ZoneItem>> getAllZoneItems(Modality modality, ServiceType serviceType, Boolean mida) {
 		Logger.log(Logger.Debug, "getAllZoneItems() - Inicio");
 		HashMap<String, List<ZoneItem>> map = new HashMap<String, List<ZoneItem>>();
-		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType, mida);
+		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType,false, mida);
 		for (Element element : ((Document) jdomDocZonning.get(Xml.DOCUMENT)).getRootElement().getChild(Xml.STANDARDZONEMODEL).getChildren(Xml.ZONEITEM)) {
 			String zoneName = element.getChild(Xml.ZONERESULT).getChildText(Xml.ZONENAME);
 			ZoneItem zoneItem = new ZoneItem(element.getChildText(Xml.DESTINATIONPREFIX), zoneName, element.getChildText(Xml.PRODUCTNAME), element.getChildText(Xml.VALIDFROM), element.getChildText(Xml.VALIDTO));
@@ -999,16 +999,16 @@ public class XmlUtilsByModality {
 			Logger.screen(Logger.Debug, "No hay cambios por aplicar en Charges [" +  modality + ","+serviceType + "]");
 		return true;
 	}
-
+	
 	public static HashMap<String, PriceTier> getPriceTiers(Modality modality, ServiceType serviceType, String campaign) {
 		return getPriceTiers(modality,serviceType,campaign,false);
 	}
-	
+
 	public static HashMap<String, PriceTier> getPriceTiers(Modality modality, ServiceType serviceType, String campaign, Boolean mida) {
 		Logger.log(Logger.Debug, "getPriceTiers(" + modality + ", " + serviceType + ") - Inicio");
 		HashMap<String, PriceTier> map = new HashMap<String, PriceTier>();
 		
-		Map<String, Object> jdomDocCharges = getChargesFile(modality, serviceType, mida);
+		Map<String, Object> jdomDocCharges = getChargesFile(modality, serviceType,false, mida);
 		List<Element> results = ((Document) jdomDocCharges.get(XmlUtilsByModality.DOCUMENT)).getRootElement().getChild(Xml.CHARGERATEPLAN).getChild(Xml.SUBSCRIBERCURRENCY).getChild(Xml.APPLICABLERUM).getChild(Xml.CRPRELDATERANGE).getChild(Xml.ZONEMODEL).getChildren(Xml.RESULTS);
 		for (Element result : results) {
 			Boolean isvalid =  true;
@@ -1148,25 +1148,25 @@ public class XmlUtilsByModality {
 		if (jdomDocZonning == null) {
 			jdomDocZonning = new HashMap<String, Object>();
 			String file = Parameters.XML_DB_DIR + Parameters.XML_ZONNING;
-			if (modality.equals(Modality.PREPAID) && serviceType.equals(ServiceType.TEL))
-				if(!mida)
-					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_PRE;
-				else
+			if (modality.equals(Modality.PREPAID) && serviceType.equals(ServiceType.TEL)){
+				if(mida)
 					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_PRE_MIDA;
+				else
+					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_PRE;}
 			else if (modality.equals(Modality.PREPAID) && serviceType.equals(ServiceType.SMS))
 				file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_SMS_PRE;
-			else if (modality.equals(Modality.HYBRID) && serviceType.equals(ServiceType.TEL))
-				if(!mida)
-					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_HYB;
-				else
+			else if (modality.equals(Modality.HYBRID) && serviceType.equals(ServiceType.TEL)){
+				if(mida)
 					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_HIB_MIDA;
+				else
+					file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_HYB;}
 			else if (modality.equals(Modality.HYBRID) && serviceType.equals(ServiceType.SMS))
 				file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_SMS_HYB;
-			else if (modality.equals(Modality.HORARY) && serviceType.equals(ServiceType.TEL))
+			else if (modality.equals(Modality.HORARY) && serviceType.equals(ServiceType.TEL) && (!mida))
 				file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_HYB_HORARIO;
-			else if (modality.equals(Modality.CCF) && serviceType.equals(ServiceType.TEL))
+			else if (modality.equals(Modality.CCF) && serviceType.equals(ServiceType.TEL) && mida)
 				file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_CCF_MIDA;
-			else if (modality.equals(Modality.CCM) && serviceType.equals(ServiceType.TEL))
+			else if (modality.equals(Modality.CCM) && serviceType.equals(ServiceType.TEL) && mida)
 				file = Parameters.XML_DB_DIR + Parameters.XML_CONFIG_ZONNING_TEL_CCM_MIDA;
 			else {
 				Logger.screen(Logger.Error, "Configuracion invalida: {" + modality + " | " + serviceType +"}, Saliendo!");
@@ -1194,7 +1194,7 @@ public class XmlUtilsByModality {
 		return getChargesFile(modality, serviceType, false);
 	}
 
-	private static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, boolean onlyFileName){
+	protected static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, boolean onlyFileName){
 		return getChargesFile(modality, serviceType, onlyFileName,false);
 	}
 
