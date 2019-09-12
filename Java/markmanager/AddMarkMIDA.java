@@ -67,9 +67,9 @@ public class AddMarkMIDA {
 	    	
 	    	HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
 	    	mapPriceTierRange.put(validFrom, listOfPriceTierRange);
-
-
 			XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_JAJA", mapPriceTierRange, "DUR"));
+		
+
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
