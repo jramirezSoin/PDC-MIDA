@@ -55,8 +55,8 @@ public class AddMarkMIDA {
 			//destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
 			//destinsIfw.next();
 			//String description = destinsIfw.getString(1);
-			//XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
-			Logger.screen();
+			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
+	
 			//Logger.screen("Iniciando PriceTierRange()");
 			//PriceTierRange ptrCrc = new PriceTierRange("1", "188", "IV-CR-NU", price3, unit1, 1.0, glid);
 			//XmlUtils.addTelephonyPriceTierRange(charge[0], validFrom, ptrCrc);
