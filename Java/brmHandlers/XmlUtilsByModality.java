@@ -69,12 +69,16 @@ public class XmlUtilsByModality {
 	}
 	
 	public static boolean addPriceTier(Modality modality, ServiceType serviceType, PriceTier priceTier) {
-		return addPriceTier(modality, serviceType, priceTier, null);
+		return addPriceTier(modality, serviceType, priceTier, null,false);
 	}
 
 	public static boolean addPriceTier(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName) {
+		return addPriceTier(modality,serviceType,priceTier,resultName,false);
+	}	
+
+	public static boolean addPriceTier(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName, Boolean mida) {
 		boolean updated = false;
-		Map<String, Object> jdomDocCharging = getChargesFile(modality, serviceType);
+		Map<String, Object> jdomDocCharging = getChargesFile(modality, serviceType,false,mida);
 		try {
 			Document document = (Document) jdomDocCharging.get(XmlUtilsByModality.DOCUMENT);
 			Element root = document.getRootElement();
@@ -555,9 +559,13 @@ public class XmlUtilsByModality {
 	}
 
 	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName) {
+		return addPriceTierRange(modality,serviceType,priceTier,resultName,false);
+	}
+
+	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName,Boolean mida) {
 		Logger.log(Logger.Debug, "addPriceTierRange() - Inicio");
 		boolean updated = false;
-		Map<String, Object> jdomDocSelecting = getChargesFile(modality, serviceType);
+		Map<String, Object> jdomDocSelecting = getChargesFile(modality, serviceType, false, mida);
 		try {
 			Document document = (Document) jdomDocSelecting.get(XmlUtilsByModality.DOCUMENT);
 			Element root = document.getRootElement();
@@ -602,8 +610,12 @@ public class XmlUtilsByModality {
 								break;
 							}
 							else if (date.equals(validFrom)) {
-								updated = true;
-								validityPeriods.remove(i);
+								if(!mida){
+									updated = true;
+									validityPeriods.remove(i);
+								}else{
+									Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
+								}
 								break;
 							}else if (date.compareTo(validFrom) < 0) {
 								i--;
@@ -612,7 +624,7 @@ public class XmlUtilsByModality {
 							}else if (validityPeriods.size() <= i) {
 								updated = true;
 								break;
-						}
+							}
 						}
 						if(updated)
 							validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
@@ -635,7 +647,7 @@ public class XmlUtilsByModality {
 				}
 			}
 			if(updated) {
-				Logger.log(Logger.Debug, "getPriceTier() - Updated");
+				Logger.screen(Logger.Debug, "getPriceTier() - Updated");
 				Logger.log(Logger.Debug, "Guardando XML de charges TEL");
 				XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 				xmlOut.output(document, new FileOutputStream((String) jdomDocSelecting.get(XmlUtilsByModality.FILE)));
