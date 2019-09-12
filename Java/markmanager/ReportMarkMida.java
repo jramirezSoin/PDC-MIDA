@@ -55,18 +55,20 @@ public class ReportMarkMida {
 					PriceTier priceTier = priceTiers.get(zoneItem.getName()); 
 					if (priceTier != null) {
 						HashMap<String, List<PriceTierRange>> priceTierRanges= priceTier.getPriceTierRanges();
-						String date = Collections.max(priceTierRanges.keySet());
-						List<PriceTierRange> listPtr = priceTierRanges.get(date);
-						int step=1;
-						for (int index=listPtr.size()-1; index>=0; index--) { 
-						Logger.onlyScreen(
-								Utils.fixedLenthString(zoneItem.getDestinationPrefix(), 15)+"|" +
-								Utils.fixedLenthString(zoneName, 40)+"|"+
-								Utils.fixedLenthString(modality+"", 3)+"|"+step+"|"+
-								Utils.fixedLenthString(Double.toString(listPtr.get(index).getPrice()), 10)+"|USD|"+DateFormater.shortDateFormat(date));
-						Logger.onlyScreen("");	
-							step++;
-						}
+						List<String> dates = new ArrayList<String>(priceTierRanges.keySet());
+						for(String date: dates){
+							List<PriceTierRange> listPtr = priceTierRanges.get(date);
+							int step=1;
+							for (int index=listPtr.size()-1; index>=0; index--) { 
+							Logger.onlyScreen(
+									Utils.fixedLenthString(zoneItem.getDestinationPrefix(), 15)+"|" +
+									Utils.fixedLenthString(zoneName, 40)+"|"+
+									Utils.fixedLenthString(modality+"", 3)+"|"+step+"|"+
+									Utils.fixedLenthString(Double.toString(listPtr.get(index).getPrice()), 10)+"|USD|"+DateFormater.shortDateFormat(date));
+							Logger.onlyScreen("");	
+								step++;
+							}
+						}	
 					}
 				}
 			}

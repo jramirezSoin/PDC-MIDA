@@ -35,6 +35,10 @@ public class AddMarkMIDA {
 		}
 		Modality modality = Modality.getModality(args[0]);
 		HashMap<String, List<ZoneItem>>  zoneDestins = XmlUtilsByModality.getAllZoneItems(modality, ServiceType.TEL, true);
+		List<String> keys= new ArrayList<String>(zoneDestins.keySet());
+		for(String s: keys){
+			Logger.onlyScreen("Key"+s);
+		}
 		Statement stmt;
 		String destinationPrefix = args[1];
 		String codigo_pais = args[2];
@@ -44,7 +48,7 @@ public class AddMarkMIDA {
         try {
 			stmt = DBManager.getConnectionIfw().createStatement();
 			ResultSet destinsIfw;
-			if (zoneDestins.containsKey(destinationPrefix)) {
+			if (zoneDestins.containsKey("PRE_IC_MIDA_"+codigo_pais+"_"+destinationPrefix)) {
 				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
 			}else{
 			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
