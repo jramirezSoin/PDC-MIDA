@@ -46,16 +46,29 @@ public class AddMarkMIDA {
 		String price = args[4];
 		String priceAd = args[5];
 		String zoneName = pais_code + "_" + destinationPrefix;
+		String rateType="DUR";
         try {
 			stmt = DBManager.getConnectionIfw().createStatement();
 			ResultSet destinsIfw;
+			//crear ZM y IC
 			if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
 				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
 			}else{
-			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
-			destinsIfw.next();
-			String description = destinsIfw.getString(1);
-			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
+				Logger.onlyScreen("Zone Item"+modality+zoneName+validFrom+destinationPrefix);
+				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);
+			}
+
+			List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
+	    	if (rateType.equals("DUR")) {
+		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", "", 100.0, "MINUTES", 60.0, "16002001"));
+		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", "", 10.0, "MINUTES", 1.0, "16002001"));
+	    	}
+	    	
+	    	HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
+	    	mapPriceTierRange.put(validFrom, listOfPriceTierRange);
+
+
+			XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_JAJA", mapPriceTierRange, "DUR"));
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
