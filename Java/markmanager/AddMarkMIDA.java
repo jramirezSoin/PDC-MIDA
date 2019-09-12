@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import brmHandlers.PinLoadGlid;
 import brmHandlers.XmlUtils;
@@ -57,9 +58,11 @@ public class AddMarkMIDA {
 
 			//validar validFrom >= a dia actual
 			Date validFrom_DATE = DateFormater.stringToDate(validFrom.replace("T", ""), new SimpleDateFormat("yyyyMMddHHmmss"));
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			
 
 			if(validFrom_DATE.compareTo(today) <= 0){
-				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + today.toString() + ")");
+				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
 			}else{
 			//crear ZM y IC
 				if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
