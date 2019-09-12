@@ -175,6 +175,7 @@ public class XmlUtilsByModality {
 			Logger.log(Logger.Debug, "Guardando XML de zonning");
 			XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 			xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE)));
+			
 			addZoneResult(modality, serviceType, zoneName, rateType);
 		} catch (IOException e) {
 			Logger.screen(Logger.Error, e.toString());

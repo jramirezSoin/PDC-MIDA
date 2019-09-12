@@ -52,10 +52,14 @@ public class AddMarkMIDA {
 			if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
 				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
 			}else{
-			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
-			destinsIfw.next();
-			String description = destinsIfw.getString(1);
-			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
+			//destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
+			//destinsIfw.next();
+			//String description = destinsIfw.getString(1);
+			//XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
+			Logger.screen();
+			//Logger.screen("Iniciando PriceTierRange()");
+			//PriceTierRange ptrCrc = new PriceTierRange("1", "188", "IV-CR-NU", price3, unit1, 1.0, glid);
+			//XmlUtils.addTelephonyPriceTierRange(charge[0], validFrom, ptrCrc);
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
