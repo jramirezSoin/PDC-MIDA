@@ -5,9 +5,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 import brmHandlers.PinLoadGlid;
 import brmHandlers.XmlUtils;
+import brmHandlers.XmlUtilsByModality;
 import config.Parameters;
+import cust.ZoneItem;
+import database.DBManager;
 import cust.Modality;
 import cust.Modality.ResultName;
 import cust.DateFormater;
@@ -16,12 +21,7 @@ import cust.PriceTierRange;
 import cust.ServiceType;
 import cust.Utils;
 import log.Logger;
-import brmHandlers.XmlUtilsByModality;
-import config.Parameters;
-import cust.ZoneItem;
-import database.DBManager;
-import java.util.ArrayList;
-import java.util.Collections;
+
 
 public class AddMarkMIDA {
 
@@ -41,20 +41,21 @@ public class AddMarkMIDA {
 		}
 		Statement stmt;
 		String destinationPrefix = args[1];
-		String codigo_pais = args[2];
+		String pais_code = args[2];
 		String validFrom = args[3];
-		String precio = args[4];
-		String precioAd = args[5];
+		String price = args[4];
+		String priceAd = args[5];
+		String zoneName = pais_code + "_" + destinationPrefix;
         try {
 			stmt = DBManager.getConnectionIfw().createStatement();
 			ResultSet destinsIfw;
-			if (zoneDestins.containsKey("PRE_IC_MIDA_"+codigo_pais+"_"+destinationPrefix)) {
+			if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
 				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
 			}else{
 			destinsIfw = stmt.executeQuery("select NAME from IFW_STANDARD_ZONE where servicecode = 'TEL' AND ZONE_RT LIKE '%MI%' and destin_areacode = '00"+destinationPrefix+"'");
 			destinsIfw.next();
 			String description = destinsIfw.getString(1);
-			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, codigo_pais+"_"+destinationPrefix, validFrom, "inf", "00"+destinationPrefix, null);}
+			XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);}
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
