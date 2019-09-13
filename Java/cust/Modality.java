@@ -42,21 +42,30 @@ public enum Modality {
 		}
 		return null;
 	}
-	
+
 	public List<ResultName> getResultsNames(ServiceType serviceType) {
+		return getResultsNames(serviceType,false);
+	}
+	
+	public List<ResultName> getResultsNames(ServiceType serviceType, Boolean mida) {
+		Logger.onlyScreen("MIDA "+mida);
 		List<ResultName> listOfResultName = new LinkedList<Modality.ResultName>();
 		for (ResultName resultName : ResultName.class.getEnumConstants()) {
 			if(this.equals(Modality.POSPAID) && resultName.isPospaid && resultName.applyServiceType(serviceType))
 				listOfResultName.add(resultName);
-			if(this.equals(Modality.PREPAID) && resultName.isPrepaid && resultName.applyServiceType(serviceType))
+			if(this.equals(Modality.PREPAID) && resultName.isPrepaid && resultName.applyServiceType(serviceType) && (!resultName.isMida) && (!mida))
 				listOfResultName.add(resultName);
-			if(this.equals(Modality.HYBRID) && resultName.isHybrid && resultName.applyServiceType(serviceType))
+			if(this.equals(Modality.PREPAID) && resultName.isPrepaid && resultName.applyServiceType(serviceType) && resultName.isMida && mida)
+				listOfResultName.add(resultName);
+			if(this.equals(Modality.HYBRID) && resultName.isHybrid && resultName.applyServiceType(serviceType) && (!resultName.isMida) && (!mida))
+				listOfResultName.add(resultName);
+			if(this.equals(Modality.HYBRID) && resultName.isHybrid && resultName.applyServiceType(serviceType) && resultName.isMida && mida)
 				listOfResultName.add(resultName);
 			if(this.equals(Modality.HORARY) && resultName.isHorary && resultName.applyServiceType(serviceType))
 				listOfResultName.add(resultName);
-			if(this.equals(Modality.CCF) && resultName.isCCFixed && resultName.applyServiceType(serviceType))
+			if(this.equals(Modality.CCF) && resultName.isCCFixed && resultName.applyServiceType(serviceType) && resultName.isMida && mida)
 				listOfResultName.add(resultName);
-			if(this.equals(Modality.CCM) && resultName.isCCMobile && resultName.applyServiceType(serviceType))
+			if(this.equals(Modality.CCM) && resultName.isCCMobile && resultName.applyServiceType(serviceType) && resultName.isMida && mida)
 				listOfResultName.add(resultName);
 		}
 		return listOfResultName;
@@ -80,19 +89,19 @@ public enum Modality {
 
 	public enum ResultName {
 		//TEL
-		PRE_IC_VOZ_ONNET_900XXXX("900", "TelcoGsmTelephony", false, true, true, true, true, false,false,false, ""), 
-		PRE_IC_VOZ_FIJO_CC_ESPECIALES_900XXXX("10", "TelcoGsmTelephony", false, true, false, false, true, false,false,false, ""), 
-		PRE_IC_VOZ_MOVIL_CC_ESPECIALES_900XXXX("11", "TelcoGsmTelephony", false, true, false, false, true, false,false,false, ""),
+		PRE_IC_VOZ_ONNET_900XXXX("900", "TelcoGsmTelephony", false, true, true, true, true, false,false,false,false, ""), 
+		PRE_IC_VOZ_FIJO_CC_ESPECIALES_900XXXX("10", "TelcoGsmTelephony", false, true, false, false, true, false,false,false,false, ""), 
+		PRE_IC_VOZ_MOVIL_CC_ESPECIALES_900XXXX("11", "TelcoGsmTelephony", false, true, false, false, true, false,false,false,false, ""),
 		//SMS
-		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MT"), 
-		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true,false,false, "MO"),
+		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true,false,false,false, "MT"), 
+		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true,false,false,false, "MO"),
 		//MIDA
-		PRE_IC_MIDA_XXXX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true, "");
+		PRE_IC_MIDA_XXXX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true,true, "");
 		
 		public String originPrefix, productName, group;
-		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary, isCCFixed, isCCMobile;
+		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary, isCCFixed, isCCMobile, isMida;
 
-		private ResultName(String originPrefix, String productName, Boolean isPospaid, Boolean isPrepaid, Boolean isHybrid, Boolean isHorary, Boolean isTel, Boolean isSms, Boolean isCCFixed, Boolean isCCMobile, String group) {
+		private ResultName(String originPrefix, String productName, Boolean isPospaid, Boolean isPrepaid, Boolean isHybrid, Boolean isHorary, Boolean isTel, Boolean isSms, Boolean isCCFixed, Boolean isCCMobile, Boolean isMida, String group) {
 			this.originPrefix = originPrefix;
 			this.productName = productName;
 			this.isPospaid = isPospaid;
@@ -104,6 +113,7 @@ public enum Modality {
 			this.group = group;
 			this.isCCFixed = isCCFixed;
 			this.isCCMobile = isCCMobile;
+			this.isMida= isMida;
 		}
 		
 		public Boolean applyServiceType(ServiceType serviceType) {

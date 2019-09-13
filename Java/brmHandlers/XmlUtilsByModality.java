@@ -155,14 +155,19 @@ public class XmlUtilsByModality {
 
 	public static boolean addZoneItem(Modality modality, ServiceType serviceType, String zoneName,
 			String validFrom, String validTo, String destinationPrefix, String rateType) {
+		return addZoneItem(modality,serviceType,zoneName,validFrom,validTo,destinationPrefix,rateType,false);
+	}
+
+	public static boolean addZoneItem(Modality modality, ServiceType serviceType, String zoneName,
+			String validFrom, String validTo, String destinationPrefix, String rateType, Boolean mida) {
 		Logger.log(Logger.Debug, "addZoneItem() - Inicio");
 		boolean found = false;
-		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType);
+		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType,false,mida);
 		try {
 			Document document = (Document) jdomDocZonning.get(XmlUtilsByModality.DOCUMENT);
 			Element standardZoneModel = document.getRootElement().getChild(Xml.STANDARDZONEMODEL);
 			Logger.screen(Logger.Debug, "Se agrega un nuevo registro Zone Item");
-			for (ResultName resultName : modality.getResultsNames(serviceType)) {
+			for (ResultName resultName : modality.getResultsNames(serviceType,mida)) {
 				if(rateType != null && !resultName.group.equals(rateType))
 					continue;
 				Element newElem = new Element(Xml.ZONEITEM);
@@ -180,7 +185,7 @@ public class XmlUtilsByModality {
 			XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 			xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE)));
 			
-			addZoneResult(modality, serviceType, zoneName, rateType);
+			addZoneResult(modality, serviceType, zoneName, rateType,mida);
 		} catch (IOException e) {
 			Logger.screen(Logger.Error, e.toString());
 			Logger.screen(Logger.Error,
@@ -647,7 +652,7 @@ public class XmlUtilsByModality {
 				}
 			}
 			if(updated) {
-				Logger.screen(Logger.Debug, "getPriceTier() - Updated");
+				Logger.log(Logger.Debug, "getPriceTier() - Updated");
 				Logger.log(Logger.Debug, "Guardando XML de charges TEL");
 				XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 				xmlOut.output(document, new FileOutputStream((String) jdomDocSelecting.get(XmlUtilsByModality.FILE)));
@@ -711,13 +716,16 @@ public class XmlUtilsByModality {
 	}
 
 	public static void addZoneResult(Modality modality, ServiceType serviceType, String zoneName, String rateType) {
+			addZoneResult(modality,serviceType,zoneName,rateType,false);
+	}
+	public static void addZoneResult(Modality modality, ServiceType serviceType, String zoneName, String rateType,Boolean mida) {
 		Logger.log(Logger.Debug, "addZoneResult(" + zoneName + ") - Inicio");
 		Map<String, Object> jdomDocZoneResult = getZoneResultFile(modality, serviceType);
 		try {
 			Document document = (Document) jdomDocZoneResult.get(XmlUtilsByModality.DOCUMENT);
 			List<Element> zoneResults = document.getRootElement().getChildren(Xml.ZONERESULTCONFIGURATION);
 			List<Element> listOfElements = new LinkedList<Element>();
-			for (ResultName resultName : modality.getResultsNames(serviceType)) {
+			for (ResultName resultName : modality.getResultsNames(serviceType,mida)) {
 				if(rateType != null && !resultName.group.equals(rateType))
 					continue;
 				Boolean notFound = false;
