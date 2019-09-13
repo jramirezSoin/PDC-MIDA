@@ -38,6 +38,12 @@ public class AddMarkMIDA {
             Logger.screen(Logger.Error, "Parametros insuficientes");
             System.exit(Parameters.ERR_INVALID_VALUE);
 		}
+
+		if(Modality.getModality(args[0]) == null){
+		Logger.screen(Logger.Error, "La modalidad " + args[0] + " es invalida.");
+  		System.exit(Parameters.ERR_INVALID_VALUE);
+		}
+
 		Modality modality = Modality.getModality(args[0]);
 		HashMap<String, List<ZoneItem>>  zoneDestins = XmlUtilsByModality.getAllZoneItems(modality, ServiceType.TEL, true);
 		List<String> keys= new ArrayList<String>(zoneDestins.keySet());
@@ -59,7 +65,6 @@ public class AddMarkMIDA {
 			//validar validFrom >= a dia actual
 			Date validFrom_DATE = DateFormater.stringToDate(validFrom.replace("T", ""), new SimpleDateFormat("yyyyMMddHHmmss"));
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			
 
 			if(validFrom_DATE.compareTo(today) <= 0){
 				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
@@ -68,13 +73,15 @@ public class AddMarkMIDA {
 				if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
 				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
 				}else{
-				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null);
+				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null,true);
 			    }
 
+			    String glid = "1600200" + (modality.equals(Modality.HYBRID) ? "3":"1" );
 				List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
+
 	    		if (rateType.equals("DUR")) {
-		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", "", 100.0, "MINUTES", 60.0, "16002001"));
-		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", "", 10.0, "MINUTES", 1.0, "16002001"));
+		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", "", Double.parseDouble(price), "MINUTES", 60.0, glid));
+		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", "", Double.parseDouble(priceAd), "MINUTES", 1.0, glid));
 	    		}
 	    	
 	    		HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
@@ -85,7 +92,6 @@ public class AddMarkMIDA {
             else
             	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true);
 		    }
-
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
