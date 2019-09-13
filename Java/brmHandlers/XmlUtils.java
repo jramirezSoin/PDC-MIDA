@@ -2048,11 +2048,19 @@ public class XmlUtils {
 		boolean changesZonningHibSms = false;
 		boolean changesZonningHibTel = false;
 		boolean changesZonningHibHorTel = false;
+		boolean changesZonningPreMida = false;
+		boolean changesZonningHibMida = false;
+		boolean changesZonningCCFMida = false;
+		boolean changesZonningCCMMida = false;
 		boolean changesChargesPreTel = false;
 		boolean changesChargesPreSms = false;
 		boolean changesChargesHibTel = false;
 		boolean changesChargesHibSms = false;
 		boolean changesChargesHibHorTel = false;
+		boolean changesChargesPreMida = false;
+		boolean changesChargesHibMida = false;
+		boolean changesChargesCCFMida = false;
+		boolean changesChargesCCMMida = false;
 		
 		XMLInputFactory factory = XMLInputFactory.newFactory();
 		try {
@@ -2456,11 +2464,19 @@ public class XmlUtils {
 			changesZonningHibSms = XmlUtilsByModality.zonning(force, Modality.HYBRID, ServiceType.SMS);
 			changesZonningHibTel = XmlUtilsByModality.zonning(force, Modality.HYBRID, ServiceType.TEL);
 			changesZonningHibHorTel = XmlUtilsByModality.zonning(force, Modality.HORARY, ServiceType.TEL);
+			changesZonningPreMida = XmlUtilsByModality.zonning(force, Modality.PREPAID, ServiceType.TEL,true);
+			changesZonningHibMida = XmlUtilsByModality.zonning(force, Modality.HYBRID, ServiceType.TEL,true);
+			changesZonningCCFMida = XmlUtilsByModality.zonning(force, Modality.CCF, ServiceType.TEL,true);
+			changesZonningCCMMida = XmlUtilsByModality.zonning(force, Modality.CCM, ServiceType.TEL,true);
 			changesChargesPreTel = XmlUtilsByModality.charging(force, Modality.PREPAID, ServiceType.TEL);
 			changesChargesPreSms = XmlUtilsByModality.charging(force, Modality.PREPAID, ServiceType.SMS);
 			changesChargesHibTel = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.TEL);
 			changesChargesHibSms = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.SMS);
 			changesChargesHibHorTel = XmlUtilsByModality.charging(force, Modality.HORARY, ServiceType.TEL);
+			changesChargesPreMida = XmlUtilsByModality.charging(force, Modality.PREPAID, ServiceType.TEL,true);
+			changesChargesHibMida = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.TEL,true);
+			changesChargesCCFMida = XmlUtilsByModality.charging(force, Modality.CCF, ServiceType.TEL,true);
+			changesChargesCCMMida = XmlUtilsByModality.charging(force, Modality.HORARY, ServiceType.TEL,true);
 			
 			
 
@@ -2483,7 +2499,8 @@ public class XmlUtils {
 		return changesZonning || changesChargesSms || changesChargesTel || changesItemsSms || changesItemsTel || changesChargesTelUsd
 				|| changesZonningPreSms || changesZonningPreTel || changesZonningHibSms || changesZonningHibTel
 				|| changesChargesPreTel || changesChargesPreSms || changesChargesHibTel || changesChargesHibSms
-				|| changesChargesHibHorTel || changesZonningHibHorTel;
+				|| changesChargesHibHorTel || changesZonningHibHorTel || changesZonningCCMMida || changesChargesCCMMida ||
+				changesZonningCCFMida || changesChargesCCFMida || changesZonningPreMida || changesChargesPreMida || changesZonningHibMida || changesChargesHibMida;
 	}
 
 	protected static void moveProcessedFile(String fileName) {

@@ -67,6 +67,7 @@ public class AddMarkMIDA {
 
 			if(validFrom_DATE.compareTo(today) <= 0){
 				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
+				System.exit(Parameters.ERR_INTEGRATE);
 			}else{
 			//crear ZM y IC
 				if (zoneDestins.containsKey("PRE_IC_MIDA_"+destinationPrefix)) {
@@ -74,7 +75,7 @@ public class AddMarkMIDA {
 					boolean founded=false;
 					for(ZoneItem item : zItems){ if(item.getDestinationPrefix().equals("00"+pais_code)){founded=true;}}
 					if(founded)	
-						Logger.screen(Logger.Error, "La Marcacion destino "+pais_code+" del IC "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
+						Logger.onlyScreen("La Marcacion destino ["+pais_code+"] del codigo de destino ["+destinationPrefix+"] ya se encuentra configurado como zoneItem");
 					else
 						XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, destinationPrefix, validFrom, "inf", "00"+pais_code, null,true);
 				}else{

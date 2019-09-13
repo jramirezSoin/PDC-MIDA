@@ -626,21 +626,24 @@ public class XmlUtilsByModality {
 							}
 							else if (date.equals(validFrom)) {
 								if(!mida){
+									Logger.onlyScreen("TAM: "+i+" "+validityPeriods.size());
 									updated = true;
 									validityPeriods.remove(i);
 								}else{
 									if(modifyingMIDA){
 										updated = true;
 									}else
-									Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
+										Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
 								}
 								break;
 							}else if (date.compareTo(validFrom) < 0) {
 								i--;
 								updated = true;
+								modifyingMIDA=false;
 								break;
 							}else if (validityPeriods.size() <= i) {
 								updated = true;
+								modifyingMIDA=false;
 								break;
 							}
 						}
@@ -650,8 +653,10 @@ public class XmlUtilsByModality {
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
 							else
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
-						}else if(updated && modifyingMIDA)
+						}else if(updated && modifyingMIDA){
+							Logger.onlyScreen("ENTRA SET "+(i-1));
 							validityPeriods.set(i-1, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
+						}
 
 					}
 
