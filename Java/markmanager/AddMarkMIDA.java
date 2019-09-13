@@ -48,12 +48,11 @@ public class AddMarkMIDA {
 		HashMap<String, List<ZoneItem>>  zoneDestins = XmlUtilsByModality.getAllZoneItems(modality, ServiceType.TEL, true);
 		List<String> keys= new ArrayList<String>(zoneDestins.keySet());
 		Statement stmt;
-		String destinationPrefix = args[1];
-		String pais_code = args[2];
+		String destinationPrefix = args[1]; //Codigo_destino USA_1
+		String pais_code = args[2]; //Codigo pais 1707
 		String validFrom = args[3]+"T000000";
 		String price = args[4];
 		String priceAd = args[5];
-		String zoneName = pais_code + "_" + destinationPrefix;
 		String rateType="DUR";
 		Date today = new Date();
 
@@ -70,26 +69,32 @@ public class AddMarkMIDA {
 				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
 			}else{
 			//crear ZM y IC
-				if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
-				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
+				if (zoneDestins.containsKey("PRE_IC_MIDA_"+destinationPrefix)) {
+					List<ZoneItem> zItems = zoneDestins.get("PRE_IC_MIDA_"+destinationPrefix);
+					boolean founded=false;
+					for(ZoneItem item : zItems){ if(item.getDestinationPrefix().equals("00"+pais_code)){founded=true;}}
+					if(founded)	
+						Logger.screen(Logger.Error, "La Marcacion destino "+pais_code+" del IC "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
+					else
+						XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, destinationPrefix, validFrom, "inf", "00"+pais_code, null,true);
 				}else{
-				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null,true);
+				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, destinationPrefix, validFrom, "inf", "00"+pais_code, null,true);
 			    }
 
 			    String glid = "1600200" + (modality.equals(Modality.HYBRID) ? "3":"1" );
 				List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
 
-		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", "", Double.parseDouble(price), "MINUTES", 60.0, glid));
-		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", "", Double.parseDouble(priceAd), "MINUTES", 1.0, glid));
+		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", null, Double.parseDouble(price), "MINUTES", 60.0, glid));
+		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", null, Double.parseDouble(priceAd), "MINUTES", 1.0, glid));
 	    		
 	    	
 	    		HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
 	    		mapPriceTierRange.put(validFrom, listOfPriceTierRange);
-				HashMap<String, PriceTier> priceTiers= XmlUtilsByModality.getPriceTiers(modality, ServiceType.TEL, zoneName, true);
+				HashMap<String, PriceTier> priceTiers= XmlUtilsByModality.getPriceTiers(modality, ServiceType.TEL, destinationPrefix, true);
             if(priceTiers.size()==0)
-                XmlUtilsByModality.addPriceTier(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true);
+                XmlUtilsByModality.addPriceTier(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+destinationPrefix, mapPriceTierRange, rateType),null,true);
             else
-            	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true, false);
+            	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+destinationPrefix, mapPriceTierRange, rateType),null,true, false);
 		    }
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());

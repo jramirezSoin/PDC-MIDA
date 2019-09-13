@@ -101,7 +101,7 @@ public class ModifyMarkMIDA {
 	    		mapPriceTierRange.put(validFrom, listOfPriceTierRange);
 				HashMap<String, PriceTier> priceTiers= XmlUtilsByModality.getPriceTiers(modality, ServiceType.TEL, zoneName, true);
             if(priceTiers.size()==0)
-            	Logger.screenOnly("No existe priceTiers para la marcacion actual");
+            	Logger.onlyScreen("No existe priceTiers para la marcacion actual");
             	//XmlUtilsByModality.addPriceTier(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true);
             else
             	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true, true);
