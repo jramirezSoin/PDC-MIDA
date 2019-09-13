@@ -167,12 +167,16 @@ public class XmlUtilsByModality {
 			Document document = (Document) jdomDocZonning.get(XmlUtilsByModality.DOCUMENT);
 			Element standardZoneModel = document.getRootElement().getChild(Xml.STANDARDZONEMODEL);
 			Logger.screen(Logger.Debug, "Se agrega un nuevo registro Zone Item");
+			String oPrefix="02";
+            if(mida){
+                oPrefix= ((modality.equals(Modality.CCM))?"08":((modality.equals(Modality.CCF))?"07":"02"));
+            }
 			for (ResultName resultName : modality.getResultsNames(serviceType,mida)) {
 				if(rateType != null && !resultName.group.equals(rateType))
 					continue;
 				Element newElem = new Element(Xml.ZONEITEM);
 				newElem.addContent(new Element(Xml.PRODUCTNAME).setText(resultName.productName));
-				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(resultName.originPrefix));
+				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(((!mida)?resultName.originPrefix:oPrefix)));
 				newElem.addContent(new Element(Xml.DESTINATIONPREFIX).setText(destinationPrefix));
 				newElem.addContent(new Element(Xml.VALIDFROM).setText(validFrom));
 				newElem.addContent(new Element(Xml.VALIDTO).setText(validTo));
@@ -564,12 +568,13 @@ public class XmlUtilsByModality {
 	}
 
 	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName) {
-		return addPriceTierRange(modality,serviceType,priceTier,resultName,false);
+		return addPriceTierRange(modality,serviceType,priceTier,resultName,false, false);
 	}
 
-	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName,Boolean mida) {
+	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName, Boolean mida, boolean modifyingMIDA) {
 		Logger.log(Logger.Debug, "addPriceTierRange() - Inicio");
 		boolean updated = false;
+		boolean modifyingMIDA = false;
 		Map<String, Object> jdomDocSelecting = getChargesFile(modality, serviceType, false, mida);
 		try {
 			Document document = (Document) jdomDocSelecting.get(XmlUtilsByModality.DOCUMENT);
@@ -615,7 +620,7 @@ public class XmlUtilsByModality {
 								break;
 							}
 							else if (date.equals(validFrom)) {
-								if(!mida){
+								if(!mida || modifyingMIDA){
 									updated = true;
 									validityPeriods.remove(i);
 								}else{

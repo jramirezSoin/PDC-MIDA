@@ -28,13 +28,13 @@ import log.Logger;
 
 
 
-public class AddMarkMIDA {
+public class ModifyMarkMIDA {
 
 	public static void main(String[] args) {
         Parameters.loadParameters();
-        Logger.setName("AddMarkMIDA");
-		Logger.log(Logger.Debug, "Creacion de destino internacional");
-		if (args.length < 6) {
+        Logger.setName("ModifyMarkMIDA");
+		Logger.log(Logger.Debug, "Modificacion de destino internacional");
+		if (args.length < 5) {
             Logger.screen(Logger.Error, "Parametros insuficientes");
             System.exit(Parameters.ERR_INVALID_VALUE);
 		}
@@ -48,19 +48,36 @@ public class AddMarkMIDA {
 		HashMap<String, List<ZoneItem>>  zoneDestins = XmlUtilsByModality.getAllZoneItems(modality, ServiceType.TEL, true);
 		List<String> keys= new ArrayList<String>(zoneDestins.keySet());
 		Statement stmt;
-		String destinationPrefix = args[1];
-		String pais_code = args[2];
-		String validFrom = args[3];
-		String price = args[4];
-		String priceAd = args[5];
-		String zoneName = pais_code + "_" + destinationPrefix;
+		String destinationPrefix = args[1]; //number
+		//String pais_code = args[2];
+		String validFrom = args[2];
+		String price = args[3];
+		String priceAd = args[4];
+		String zoneName = "PRE_IC_MIDA_" + destinationPrefix;
 		String rateType="DUR";
 		Date today = new Date();
 
         try {
 
-			stmt = DBManager.getConnectionIfw().createStatement();
+        	stmt = DBManager.getConnectionIfw().createStatement();
 			ResultSet destinsIfw;
+
+
+			//Obtener zoneName en base al destinationPrefix
+			boolean founded = false;
+			for(String key:keys){
+				String keyWithoutCode = key.substring(0, 12) + key.substring(16);
+				if(keyWithoutCode.equals(zoneName)){
+					zoneName = key;
+					founded = true;
+					break;
+				 }
+				}
+
+				if(!founded){
+				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar no existe para el servicio TEL");
+				System.exit(Parameters.ERR_INVALID_VALUE);
+				}
 
 			//validar validFrom >= a dia actual
 			Date validFrom_DATE = DateFormater.stringToDate(validFrom.replace("T", ""), new SimpleDateFormat("yyyyMMddHHmmss"));
@@ -70,12 +87,8 @@ public class AddMarkMIDA {
 				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
 			}else{
 			//crear ZM y IC
-				if (zoneDestins.containsKey("PRE_IC_MIDA_"+zoneName)) {
-				Logger.screen(Logger.Error, "La Marcacion destino "+destinationPrefix+" que intenta configurar ya existe para el servicio TEL");
-				}else{
+				Logger.onlyScreen("Inicio de modificacion");
 				XmlUtilsByModality.addZoneItem(modality, ServiceType.TEL, zoneName, validFrom, "inf", "00"+destinationPrefix, null,true);
-			    }
-
 			    String glid = "1600200" + (modality.equals(Modality.HYBRID) ? "3":"1" );
 				List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
 
@@ -88,9 +101,10 @@ public class AddMarkMIDA {
 	    		mapPriceTierRange.put(validFrom, listOfPriceTierRange);
 				HashMap<String, PriceTier> priceTiers= XmlUtilsByModality.getPriceTiers(modality, ServiceType.TEL, zoneName, true);
             if(priceTiers.size()==0)
-                XmlUtilsByModality.addPriceTier(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true);
+            	Logger.screenOnly("No existe priceTiers para la marcacion actual");
+            	//XmlUtilsByModality.addPriceTier(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true);
             else
-            	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true, false);
+            	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier("PRE_IC_MIDA_"+zoneName, mapPriceTierRange, rateType),null,true, true);
 		    }
 		} catch (SQLException e) {
             Logger.screen(Logger.Error, e.toString());
