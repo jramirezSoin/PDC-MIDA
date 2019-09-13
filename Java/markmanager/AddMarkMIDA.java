@@ -50,7 +50,7 @@ public class AddMarkMIDA {
 		Statement stmt;
 		String destinationPrefix = args[1];
 		String pais_code = args[2];
-		String validFrom = args[3];
+		String validFrom = args[3]+"T000000";
 		String price = args[4];
 		String priceAd = args[5];
 		String zoneName = pais_code + "_" + destinationPrefix;
@@ -79,10 +79,9 @@ public class AddMarkMIDA {
 			    String glid = "1600200" + (modality.equals(Modality.HYBRID) ? "3":"1" );
 				List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
 
-	    		if (rateType.equals("DUR")) {
 		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", "", Double.parseDouble(price), "MINUTES", 60.0, glid));
 		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", "", Double.parseDouble(priceAd), "MINUTES", 1.0, glid));
-	    		}
+	    		
 	    	
 	    		HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
 	    		mapPriceTierRange.put(validFrom, listOfPriceTierRange);

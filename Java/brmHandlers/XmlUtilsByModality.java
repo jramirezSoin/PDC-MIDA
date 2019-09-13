@@ -115,8 +115,10 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "addPriceTier() - Fin");
 		return updated;
 	}
-
 	private static Element makeResultElement(Modality modality, ServiceType serviceType, String name, PriceTier pt, ResultName resultName) {
+		return makeResultElement(modality,serviceType,name,pt,resultName,false);
+	}
+	private static Element makeResultElement(Modality modality, ServiceType serviceType, String name, PriceTier pt, ResultName resultName, Boolean mida) {
 		Logger.log(Logger.Debug, "makeResultElement(" + modality + ", " + serviceType + ", " + name + ", " + pt.getName() + ", " + pt.getRum() + ") - Inicio");
 		Element result = new Element(Xml.RESULTS);
 		result.setAttribute(new Attribute(Parameters.XML_TAG_FLAG, "update"));
@@ -129,7 +131,7 @@ public class XmlUtilsByModality {
 		priceTier.addContent(new Element(Xml.TIERBASIS).addContent(new Element(Xml.RUMTIEREXPRESSION)));
 		priceTier.addContent(new Element(Xml.ENFORCECREDITLIMIT).setText("false"));
 		priceTier.addContent(new Element(Xml.RUMNAME).setText(pt.getRum()));
-		priceTier.addContent(new Element(Xml.CURRENCYCODE).setText("CRC"));
+		priceTier.addContent(new Element(Xml.CURRENCYCODE).setText(((!mida)?"CRC":"USD")));
 
 		List<String> keys = new ArrayList<String>();
 		for (String date : pt.getPriceTierRanges().keySet()) {
@@ -167,12 +169,16 @@ public class XmlUtilsByModality {
 			Document document = (Document) jdomDocZonning.get(XmlUtilsByModality.DOCUMENT);
 			Element standardZoneModel = document.getRootElement().getChild(Xml.STANDARDZONEMODEL);
 			Logger.screen(Logger.Debug, "Se agrega un nuevo registro Zone Item");
+			String oPrefix="02";
+			if(mida){
+				oPrefix= ((modality.equals(Modality.CCM))?"08":((modality.equals(Modality.CCM))?"07":"02"));
+			}
 			for (ResultName resultName : modality.getResultsNames(serviceType,mida)) {
 				if(rateType != null && !resultName.group.equals(rateType))
 					continue;
 				Element newElem = new Element(Xml.ZONEITEM);
 				newElem.addContent(new Element(Xml.PRODUCTNAME).setText(resultName.productName));
-				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(resultName.originPrefix));
+				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(((!mida)?resultName.originPrefix:oPrefix)));
 				newElem.addContent(new Element(Xml.DESTINATIONPREFIX).setText(destinationPrefix));
 				newElem.addContent(new Element(Xml.VALIDFROM).setText(validFrom));
 				newElem.addContent(new Element(Xml.VALIDTO).setText(validTo));
