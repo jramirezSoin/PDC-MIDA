@@ -547,8 +547,7 @@ public class XmlUtilsByModality {
 			}
 			scaledFixedCharge.addContent(new Element(Xml.GLID).setText(ptr.getGlid()));
 			if (ptr.isScaledCharge()) {
-				Logger.onlyScreen("ENTRA, "+ ptr.getIncrementStep() +"");
-				scaledFixedCharge.addContent(new Element(Xml.INCREMENTSTEP).setText(((mida) ? ptr.getIncrementStep() +"" : "1.0")));
+				scaledFixedCharge.addContent(new Element(Xml.INCREMENTSTEP).setText(((mida) ? ptr.getIncrementStep()+"" : "1.0")));
 				scaledFixedCharge.addContent(new Element(Xml.INCREMENTROUNDING).setText("NONE"));
 			}
 			Element priceTierRange = null;
@@ -646,15 +645,16 @@ public class XmlUtilsByModality {
 							}
 						}
 
-						if(updated && !modifyingMIDA)
+						if(updated && !modifyingMIDA){
 							if(mida)
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
 							else
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
-						else if(updated && modifyingMIDA)
+						}else if(updated && modifyingMIDA)
 							validityPeriods.set(i-1, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
-		
+
 					}
+
 					if(updated) {
 						String applicableQuantity = _priceTier.getChildText(Xml.APPLICABLEQUANTITY);
 						if(applicableQuantity != null) {
