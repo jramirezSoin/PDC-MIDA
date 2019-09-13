@@ -64,8 +64,7 @@ public class ReportMarkMida {
 									Utils.fixedLenthString(zoneItem.getDestinationPrefix(), 15)+"|" +
 									Utils.fixedLenthString(zoneName, 40)+"|"+
 									Utils.fixedLenthString(modality+"", 3)+"|"+step+"|"+
-									Utils.fixedLenthString(Double.toString(listPtr.get(index).getPrice()), 10)+"|USD|"+DateFormater.shortDateFormat(date));
-							Logger.onlyScreen("");	
+									Utils.fixedLenthString(Double.toString(listPtr.get(index).getPrice()), 10)+"|USD|"+DateFormater.shortDateFormat(date));	
 								step++;
 							}
 						}	

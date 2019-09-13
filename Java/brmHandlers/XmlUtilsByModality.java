@@ -100,7 +100,7 @@ public class XmlUtilsByModality {
 
 			Element enhacedZoneModelDur = ar.getChild(Xml.CRPRELDATERANGE).getChild(Xml.ZONEMODEL);
 			Logger.log(Logger.Debug, "addPriceTier(" + priceTier.getName() + ") - Inicio");
-			enhacedZoneModelDur.addContent(makeResultElement(modality, serviceType, priceTier.getName(), priceTier, resultName));
+			enhacedZoneModelDur.addContent(makeResultElement(modality, serviceType, priceTier.getName(), priceTier, resultName, mida));
 			Logger.log(Logger.Debug, "addPriceTier(" + priceTier.getName() + ") - Fin");
 			Logger.log(Logger.Debug, "Guardando XML de charges");
 			XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
@@ -127,7 +127,7 @@ public class XmlUtilsByModality {
 		crpCompositePopModel.addContent(new Element(Xml.NAME).setText("Precios"));
 		Element usageChargePopModel = new Element(Xml.USAGECHARGEPOPMODEL);
 		Element priceTier = new Element(Xml.PRICETIER);
-		priceTier.addContent(new Element(Xml.DISTRIBUTIONMETHOD).setText(serviceType.distributionMethod));
+		priceTier.addContent(new Element(Xml.DISTRIBUTIONMETHOD).setText(((mida)? "BAL_FROM_IMPACT" : serviceType.distributionMethod)));
 		priceTier.addContent(new Element(Xml.TIERBASIS).addContent(new Element(Xml.RUMTIEREXPRESSION)));
 		priceTier.addContent(new Element(Xml.ENFORCECREDITLIMIT).setText("false"));
 		priceTier.addContent(new Element(Xml.RUMNAME).setText(pt.getRum()));
@@ -139,7 +139,7 @@ public class XmlUtilsByModality {
 		}
 		Collections.sort(keys);
 		for (String date : keys) {
-			priceTier.addContent(getPriceTierValidityPeriod(date, pt.getPriceTierRanges().get(date), resultName));
+			priceTier.addContent(getPriceTierValidityPeriod(date, pt.getPriceTierRanges().get(date), resultName, true));
 		}
 		priceTier.addContent(new Element(Xml.APPLICABLEQUANTITY).setText("ORIGINAL"));
 		usageChargePopModel.addContent(priceTier);
@@ -444,8 +444,8 @@ public class XmlUtilsByModality {
 		return true;
 	}
 
-	public static boolean addItemRuleSpecTelephony(Modality modality, ServiceType serviceType, String idCampaign,
-			String desc) {
+	public static boolean addItemRuleSpecTelephony(Modality modality, 
+		ServiceType serviceType, String idCampaign, String desc) {
 		Logger.log(Logger.Debug, "addItemRuleSpecTelephony(" + idCampaign + ", " + desc + ") - Inicio");
 		Map<String, Object> jdomDocSelecting = getSelectorFile(modality, serviceType);
 		try {
@@ -516,6 +516,10 @@ public class XmlUtilsByModality {
 	}
 
 	private static Element getPriceTierValidityPeriod(String date, List<PriceTierRange> listOfPriceTierRange, ResultName resultName) {
+		return getPriceTierValidityPeriod(date, listOfPriceTierRange, resultName, false);
+	}
+
+	private static Element getPriceTierValidityPeriod(String date, List<PriceTierRange> listOfPriceTierRange, ResultName resultName, Boolean mida) {
 		Element priceTierValidityPeriod = new Element(Xml.PRICETIERVALIDITYPERIOD);
 		priceTierValidityPeriod.addContent(new Element(Xml.LOWERBOUND).setText("0"));
 		priceTierValidityPeriod.addContent(new Element(Xml.VALIDFROM).setText(date));
@@ -543,7 +547,8 @@ public class XmlUtilsByModality {
 			}
 			scaledFixedCharge.addContent(new Element(Xml.GLID).setText(ptr.getGlid()));
 			if (ptr.isScaledCharge()) {
-				scaledFixedCharge.addContent(new Element(Xml.INCREMENTSTEP).setText("1.0"));
+				Logger.onlyScreen("ENTRA, "+ ptr.getIncrementStep() +"");
+				scaledFixedCharge.addContent(new Element(Xml.INCREMENTSTEP).setText(((mida) ? ptr.getIncrementStep() +"" : "1.0")));
 				scaledFixedCharge.addContent(new Element(Xml.INCREMENTROUNDING).setText("NONE"));
 			}
 			Element priceTierRange = null;
@@ -576,7 +581,6 @@ public class XmlUtilsByModality {
 	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier, ResultName resultName, Boolean mida, boolean modifyingMIDA) {
 		Logger.log(Logger.Debug, "addPriceTierRange() - Inicio");
 		boolean updated = false;
-		boolean modifyingMIDA = false;
 		Map<String, Object> jdomDocSelecting = getChargesFile(modality, serviceType, false, mida);
 		try {
 			Document document = (Document) jdomDocSelecting.get(XmlUtilsByModality.DOCUMENT);
@@ -622,10 +626,13 @@ public class XmlUtilsByModality {
 								break;
 							}
 							else if (date.equals(validFrom)) {
-								if(!mida || modifyingMIDA){
+								if(!mida){
 									updated = true;
 									validityPeriods.remove(i);
 								}else{
+									if(modifyingMIDA){
+										updated = true;
+									}else
 									Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
 								}
 								break;
@@ -638,8 +645,15 @@ public class XmlUtilsByModality {
 								break;
 							}
 						}
-						if(updated)
-							validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
+
+						if(updated && !modifyingMIDA)
+							if(mida)
+								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
+							else
+								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
+						else if(updated && modifyingMIDA)
+							validityPeriods.set(i-1, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
+		
 					}
 					if(updated) {
 						String applicableQuantity = _priceTier.getChildText(Xml.APPLICABLEQUANTITY);

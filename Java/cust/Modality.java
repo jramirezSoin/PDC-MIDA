@@ -48,7 +48,6 @@ public enum Modality {
 	}
 	
 	public List<ResultName> getResultsNames(ServiceType serviceType, Boolean mida) {
-		Logger.onlyScreen("MIDA "+mida);
 		List<ResultName> listOfResultName = new LinkedList<Modality.ResultName>();
 		for (ResultName resultName : ResultName.class.getEnumConstants()) {
 			if(this.equals(Modality.POSPAID) && resultName.isPospaid && resultName.applyServiceType(serviceType))
