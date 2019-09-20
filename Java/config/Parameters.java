@@ -77,7 +77,7 @@ public final class Parameters {
     public static String XML_CONFIG_SELECTOR_SMS_HYB="";
     public static String XML_CONFIG_SELECTOR_TEL_HYB="";
 
-    //CONFIG MIDA
+    //CONFIG MIDA CAMBIO
     public static String PDC_CONFIG_ZONNING_TEL_PRE_MIDA="";
     public static String PDC_CONFIG_ZONNING_TEL_CCF_MIDA="";
     public static String PDC_CONFIG_ZONNING_TEL_CCM_MIDA="";
@@ -218,7 +218,7 @@ public final class Parameters {
         PDC_CONFIG_CHARGES_SMS_HYB=confFile.getString("pdc.config.charges.sms.hib").trim();
         PDC_CONFIG_CHARGES_TEL_HYB=confFile.getString("pdc.config.charges.tel.hib").trim();
         PDC_CONFIG_CHARGES_TEL_HYB_HORARIO=confFile.getString("pdc.config.charges.tel.hib.horario").trim();
-        
+        //CAMBIO
         PDC_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("pdc.config.zonning.tel.pre.mida").trim();
         PDC_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("pdc.config.zonning.tel.ccf.mida").trim();
         PDC_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("pdc.config.zonning.tel.ccm.mida").trim();
@@ -264,7 +264,7 @@ public final class Parameters {
         XML_CONFIG_CHARGES_TEL_HYB_HORARIO=confFile.getString("xml.config.charges.tel.hib.horario").trim();
         XML_CONFIG_SELECTOR_SMS_HYB=confFile.getString("xml.config.selector.sms.hib").trim();
         XML_CONFIG_SELECTOR_TEL_HYB=confFile.getString("xml.config.selector.tel.hib").trim();
-
+        //CAMBIO
         XML_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("xml.config.zonning.tel.pre.mida").trim();
         XML_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("xml.config.zonning.tel.ccf.mida").trim();
         XML_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("xml.config.zonning.tel.ccm.mida").trim();

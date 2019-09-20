@@ -67,7 +67,7 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "getTelephonyPriceTier() - Fin");
 		return false;
 	}
-	
+	//CAMBIO
 	public static boolean addPriceTier(Modality modality, ServiceType serviceType, PriceTier priceTier) {
 		return addPriceTier(modality, serviceType, priceTier, null,false);
 	}
@@ -115,6 +115,7 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "addPriceTier() - Fin");
 		return updated;
 	}
+	//CAMBIO
 	private static Element makeResultElement(Modality modality, ServiceType serviceType, String name, PriceTier pt, ResultName resultName) {
 		return makeResultElement(modality,serviceType,name,pt,resultName,false);
 	}
@@ -127,7 +128,7 @@ public class XmlUtilsByModality {
 		crpCompositePopModel.addContent(new Element(Xml.NAME).setText("Precios"));
 		Element usageChargePopModel = new Element(Xml.USAGECHARGEPOPMODEL);
 		Element priceTier = new Element(Xml.PRICETIER);
-		priceTier.addContent(new Element(Xml.DISTRIBUTIONMETHOD).setText(((mida)? "BAL_FROM_IMPACT" : serviceType.distributionMethod)));
+		priceTier.addContent(new Element(Xml.DISTRIBUTIONMETHOD).setText(((mida)? "FROM_BAL_IMPACT" : serviceType.distributionMethod)));
 		priceTier.addContent(new Element(Xml.TIERBASIS).addContent(new Element(Xml.RUMTIEREXPRESSION)));
 		priceTier.addContent(new Element(Xml.ENFORCECREDITLIMIT).setText("false"));
 		priceTier.addContent(new Element(Xml.RUMNAME).setText(pt.getRum()));
@@ -141,7 +142,7 @@ public class XmlUtilsByModality {
 		for (String date : keys) {
 			priceTier.addContent(getPriceTierValidityPeriod(date, pt.getPriceTierRanges().get(date), resultName, true));
 		}
-		priceTier.addContent(new Element(Xml.APPLICABLEQUANTITY).setText("ORIGINAL"));
+		priceTier.addContent(new Element(Xml.APPLICABLEQUANTITY).setText(((mida)?"REMAINING":"ORIGINAL")));
 		usageChargePopModel.addContent(priceTier);
 		crpCompositePopModel.addContent(usageChargePopModel);
 		if(modality.equals(Modality.HORARY)) {
@@ -154,7 +155,7 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "makeResultElement() - Fin");
 		return result;
 	}
-
+	//CAMBIO
 	public static boolean addZoneItem(Modality modality, ServiceType serviceType, String zoneName,
 			String validFrom, String validTo, String destinationPrefix, String rateType) {
 		return addZoneItem(modality,serviceType,zoneName,validFrom,validTo,destinationPrefix,rateType,false);
@@ -178,7 +179,7 @@ public class XmlUtilsByModality {
 					continue;
 				Element newElem = new Element(Xml.ZONEITEM);
 				newElem.addContent(new Element(Xml.PRODUCTNAME).setText(resultName.productName));
-				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(((!mida)?resultName.originPrefix:oPrefix)));
+				newElem.addContent(new Element(Xml.ORIGINPREFIX).setText(resultName.originPrefix));
 				newElem.addContent(new Element(Xml.DESTINATIONPREFIX).setText(destinationPrefix));
 				newElem.addContent(new Element(Xml.VALIDFROM).setText(validFrom));
 				newElem.addContent(new Element(Xml.VALIDTO).setText(validTo));
@@ -514,7 +515,7 @@ public class XmlUtilsByModality {
 		Logger.log(Logger.Debug, "addItemRuleSpecTelephony() - Fin");
 		return true;
 	}
-
+	//CAMBIO
 	private static Element getPriceTierValidityPeriod(String date, List<PriceTierRange> listOfPriceTierRange, ResultName resultName) {
 		return getPriceTierValidityPeriod(date, listOfPriceTierRange, resultName, false);
 	}
@@ -538,7 +539,7 @@ public class XmlUtilsByModality {
 				scaledFixedCharge = new Element(Xml.FIXEDCHARGE);
 			scaledFixedCharge.addContent(new Element(Xml.PRICE).setText(ptr.getPrice().toString()));
 			scaledFixedCharge.addContent(new Element(Xml.UNITOFMEASURE).setText(ptr.getUnitOfMeasure()));
-			scaledFixedCharge.addContent(new Element(Xml.BALANCEELEMENTNUMCODE).setText("188"));
+			scaledFixedCharge.addContent(new Element(Xml.BALANCEELEMENTNUMCODE).setText(((mida) ? ptr.getBalanceElementNumCode()+"" : "188")));
 			scaledFixedCharge.addContent(new Element(Xml.DISCOUNTABLE).setText("true"));
 			scaledFixedCharge.addContent(new Element(Xml.PRICETYPE).setText("CONSUMPTION"));
 			if(ptr.getTaxCode() != null) {
@@ -548,7 +549,7 @@ public class XmlUtilsByModality {
 			scaledFixedCharge.addContent(new Element(Xml.GLID).setText(ptr.getGlid()));
 			if (ptr.isScaledCharge()) {
 				scaledFixedCharge.addContent(new Element(Xml.INCREMENTSTEP).setText(((mida) ? ptr.getIncrementStep()+"" : "1.0")));
-				scaledFixedCharge.addContent(new Element(Xml.INCREMENTROUNDING).setText("NONE"));
+				scaledFixedCharge.addContent(new Element(Xml.INCREMENTROUNDING).setText(((mida && ptr.getIncrementStep()==60.0)?"UP":"NONE")));
 			}
 			Element priceTierRange = null;
 			for (Element _priceTierRange : listOfpriceTierRanges) {
@@ -568,7 +569,7 @@ public class XmlUtilsByModality {
 		priceTierValidityPeriod.addContent(listOfpriceTierRanges);
 		return priceTierValidityPeriod;
 	}
-	
+	//CAMBIO
 	public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier) {
 		return addPriceTierRange(modality, serviceType, priceTier, null);
 	}
@@ -626,14 +627,13 @@ public class XmlUtilsByModality {
 							}
 							else if (date.equals(validFrom)) {
 								if(!mida){
-									Logger.onlyScreen("TAM: "+i+" "+validityPeriods.size());
 									updated = true;
 									validityPeriods.remove(i);
 								}else{
 									if(modifyingMIDA){
 										updated = true;
 									}else
-										Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
+									Logger.screen(Logger.Error,"La fecha seleccionada, ya existe, ejecute el comando de modificacion respectivo");
 								}
 								break;
 							}else if (date.compareTo(validFrom) < 0) {
@@ -653,10 +653,8 @@ public class XmlUtilsByModality {
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
 							else
 								validityPeriods.add(i, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName));
-						}else if(updated && modifyingMIDA){
-							Logger.onlyScreen("ENTRA SET "+(i-1));
+						}else if(updated && modifyingMIDA)
 							validityPeriods.set(i-1, getPriceTierValidityPeriod(date, priceTier.getPriceTierRanges().get(date), resultName, mida));
-						}
 
 					}
 
@@ -664,7 +662,7 @@ public class XmlUtilsByModality {
 						String applicableQuantity = _priceTier.getChildText(Xml.APPLICABLEQUANTITY);
 						if(applicableQuantity != null) {
 							_priceTier.removeChild(Xml.APPLICABLEQUANTITY);
-							_priceTier.addContent(new Element(Xml.APPLICABLEQUANTITY).setText("ORIGINAL"));
+							_priceTier.addContent(new Element(Xml.APPLICABLEQUANTITY).setText(((mida)?"REMAINING":"ORIGINAL")));
 						}
 						if(modality.equals(Modality.HORARY)) {
 							Element tag = new Element(Xml.TAGS);
@@ -740,7 +738,7 @@ public class XmlUtilsByModality {
 		}
 		Logger.log(Logger.Debug, "updateHistoryXml() - Fin");
 	}
-
+	//CAMBIO
 	public static void addZoneResult(Modality modality, ServiceType serviceType, String zoneName, String rateType) {
 			addZoneResult(modality,serviceType,zoneName,rateType,false);
 	}
@@ -881,7 +879,7 @@ public class XmlUtilsByModality {
 	public static HashMap<String, List<ZoneItem>> getAllZoneItems(Modality modality, ServiceType serviceType) {
 		return getAllZoneItems(modality,serviceType,false);
 	}
-
+	//CAMBIO
 	public static HashMap<String, List<ZoneItem>> getAllZoneItems(Modality modality, ServiceType serviceType, Boolean mida) {
 		Logger.log(Logger.Debug, "getAllZoneItems() - Inicio");
 		HashMap<String, List<ZoneItem>> map = new HashMap<String, List<ZoneItem>>();
@@ -965,10 +963,15 @@ public class XmlUtilsByModality {
 		return found;
 	}
 	
+	//CAMBIO
 	protected static Boolean zonning(Boolean force, Modality modality, ServiceType serviceType) throws FileNotFoundException, IOException, ExceptionImportExportPricing, InterruptedException {
+		return zonning(force, modality, serviceType, false);
+	}
+
+	protected static Boolean zonning(Boolean force, Modality modality, ServiceType serviceType, Boolean mida) throws FileNotFoundException, IOException, ExceptionImportExportPricing, InterruptedException {
 		
-		Logger.screen(Logger.Debug, "Analizando Zonning [" +  modality + ","+serviceType + "]");
-		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType);
+		Logger.screen(Logger.Debug, "Analizando Zonning [" +  modality + ","+serviceType + ((mida)?",MIDA":"")+ "]");
+		Map<String, Object> jdomDocZonning = getZoneFile(modality, serviceType, false, mida);
 		Boolean changesZonning = false, refreshNeededZonning = false;
 		Document document = (Document) jdomDocZonning.get(XmlUtilsByModality.DOCUMENT);
 		List<Element> zoneItemsDoc = document.getRootElement().getChild(Xml.STANDARDZONEMODEL).getChildren(Xml.ZONEITEM);
@@ -976,7 +979,7 @@ public class XmlUtilsByModality {
 			Attribute a = element.getAttribute(Parameters.XML_TAG_FLAG);
 			if (a != null) {
 				if (changesZonning == false) {
-					Logger.log(Logger.Debug, "Guardando backup de XML de zonning [" +  modality + "," + serviceType + "]");
+					Logger.log(Logger.Debug, "Guardando backup de XML de zonning [" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 					XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 					xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE)
 							+ ".bk" + DateFormater.dateToShortString()));
@@ -984,15 +987,15 @@ public class XmlUtilsByModality {
 				changesZonning = true;
 				if (a.getValue().equals("new"))
 					refreshNeededZonning = true;
-				Logger.log(Logger.Debug, "Cambio encontrado en zonning, removiendo atributo [" +  modality + "," + serviceType + "]");
+				Logger.log(Logger.Debug, "Cambio encontrado en zonning, removiendo atributo [" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 				element.removeAttribute(Parameters.XML_TAG_FLAG);
 			}
 		}
 		if (changesZonning || force) {
-			Logger.log(Logger.Debug, "Guardando XML de zonning[" +  modality + "," + serviceType + "]");
+			Logger.log(Logger.Debug, "Guardando XML de zonning[" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 			XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 			xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE) + ".process"));
-			Logger.screen(Logger.Debug, "Subiendo cambios en zonning[" +  modality + "," + serviceType + "]");
+			Logger.screen(Logger.Debug, "Subiendo cambios en zonning[" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 			List<String> args = new ArrayList<String>();
 			args.add("-ow");
 			ImportExportPricing.runImportExportPricing("-import",
@@ -1001,14 +1004,19 @@ public class XmlUtilsByModality {
 			if (refreshNeededZonning)
 				ImportExportPricing.genZonningBaseXml(true);
 		} else
-			Logger.screen(Logger.Debug, "No hay cambios por aplicar en Zonning [" +  modality + ","+serviceType + "]");
+			Logger.screen(Logger.Debug, "No hay cambios por aplicar en Zonning [" +  modality + ","+serviceType + ((mida)?",MIDA":"")+ "]");
 		return true;
 	}
 	
+	//CAMBIO
 	protected static Boolean charging(Boolean force, Modality modality, ServiceType serviceType) throws FileNotFoundException, IOException, ExceptionImportExportPricing, InterruptedException {
+		return charging(force, modality, serviceType, false);
+	}
+
+	protected static Boolean charging(Boolean force, Modality modality, ServiceType serviceType, Boolean mida) throws FileNotFoundException, IOException, ExceptionImportExportPricing, InterruptedException {
 		
-		Logger.screen(Logger.Debug, "Analizando Charges [" +  modality + ","+serviceType + "]");
-		Map<String, Object> jdomDocZonning = getChargesFile(modality, serviceType);
+		Logger.screen(Logger.Debug, "Analizando Charges [" +  modality + ","+serviceType + ((mida)?",MIDA":"")+ "]");
+		Map<String, Object> jdomDocZonning = getChargesFile(modality, serviceType, false, mida);
 		Boolean changesZonning = false, refreshNeededZonning = false;
 		Document document = (Document) jdomDocZonning.get(XmlUtilsByModality.DOCUMENT);
 		List<Element> rums = document.getRootElement().getChild(Xml.CHARGERATEPLAN).getChild(Xml.SUBSCRIBERCURRENCY).getChildren(Xml.APPLICABLERUM);
@@ -1017,7 +1025,7 @@ public class XmlUtilsByModality {
 				Attribute a = element.getAttribute(Parameters.XML_TAG_FLAG);
 				if (a != null) {
 					if (changesZonning == false) {
-						Logger.log(Logger.Debug, "Guardando backup de XML de Charges [" +  modality + "," + serviceType + "]");
+						Logger.log(Logger.Debug, "Guardando backup de XML de Charges [" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 						XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 						xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE)
 								+ ".bk" + DateFormater.dateToShortString()));
@@ -1025,16 +1033,16 @@ public class XmlUtilsByModality {
 					changesZonning = true;
 					if (a.getValue().equals("new"))
 						refreshNeededZonning = true;
-					Logger.log(Logger.Debug, "Cambio encontrado en Charges, removiendo atributo [" +  modality + "," + serviceType + "]");
+					Logger.log(Logger.Debug, "Cambio encontrado en Charges, removiendo atributo [" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 					element.removeAttribute(Parameters.XML_TAG_FLAG);
 				}
 			}
 		}
 		if (changesZonning || force) {
-			Logger.log(Logger.Debug, "Guardando XML de Charges[" +  modality + "," + serviceType + "]");
+			Logger.log(Logger.Debug, "Guardando XML de Charges[" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 			XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
 			xmlOut.output(document, new FileOutputStream((String) jdomDocZonning.get(XmlUtilsByModality.FILE) + ".process"));
-			Logger.screen(Logger.Debug, "Subiendo cambios en Charges[" +  modality + "," + serviceType + "]");
+			Logger.screen(Logger.Debug, "Subiendo cambios en Charges[" +  modality + "," + serviceType + ((mida)?",MIDA":"")+ "]");
 			List<String> args = new ArrayList<String>();
 			args.add("-ow");
 			ImportExportPricing.runImportExportPricing("-import",
@@ -1043,16 +1051,16 @@ public class XmlUtilsByModality {
 			if (refreshNeededZonning)
 				ImportExportPricing.genZonningBaseXml(true);
 		} else
-			Logger.screen(Logger.Debug, "No hay cambios por aplicar en Charges [" +  modality + ","+serviceType + "]");
+			Logger.screen(Logger.Debug, "No hay cambios por aplicar en Charges [" +  modality + ","+serviceType + ((mida)?",MIDA":"")+ "]");
 		return true;
 	}
-	
+	//CAMBIO
 	public static HashMap<String, PriceTier> getPriceTiers(Modality modality, ServiceType serviceType, String campaign) {
 		return getPriceTiers(modality,serviceType,campaign,false);
 	}
 
 	public static HashMap<String, PriceTier> getPriceTiers(Modality modality, ServiceType serviceType, String campaign, Boolean mida) {
-		Logger.log(Logger.Debug, "getPriceTiers(" + modality + ", " + serviceType + ") - Inicio");
+		Logger.log(Logger.Debug, "getPriceTiers(" + modality + ", " + serviceType + ((mida)?",MIDA":"")+ ") - Inicio");
 		HashMap<String, PriceTier> map = new HashMap<String, PriceTier>();
 		
 		Map<String, Object> jdomDocCharges = getChargesFile(modality, serviceType,false, mida);
@@ -1185,13 +1193,13 @@ public class XmlUtilsByModality {
 	private  static Map<String, Object> getZoneFile(Modality modality, ServiceType serviceType){
 		return  getZoneFile(modality, serviceType, false,false);
 	}
-
+	//CAMBIO
 	protected static Map<String, Object> getZoneFile(Modality modality, ServiceType serviceType, Boolean onlyFileName) {
 		return  getZoneFile(modality, serviceType, onlyFileName,false);
 	}
-	
+
 	protected static Map<String, Object> getZoneFile(Modality modality, ServiceType serviceType, Boolean onlyFileName, Boolean mida) {
-		Map<String, Object> jdomDocZonning = jdomDocZonnings.get(modality + "." + serviceType);
+		Map<String, Object> jdomDocZonning = jdomDocZonnings.get(modality + "." + serviceType + "." + mida);
 		if (jdomDocZonning == null) {
 			jdomDocZonning = new HashMap<String, Object>();
 			String file = Parameters.XML_DB_DIR + Parameters.XML_ZONNING;
@@ -1226,7 +1234,7 @@ public class XmlUtilsByModality {
 					XMLEventReader reader = factory.createXMLEventReader(new FileReader(file));
 					StAXEventBuilder builder = new StAXEventBuilder();
 					jdomDocZonning.put(XmlUtilsByModality.DOCUMENT, builder.build(reader));
-					jdomDocZonnings.put(modality + "." + serviceType, jdomDocZonning);
+					jdomDocZonnings.put(modality + "." + serviceType + "." + mida, jdomDocZonning);
 				} catch (FileNotFoundException | XMLStreamException | JDOMException e) {
 					Logger.screen(Logger.Error, e.toString());
 					Logger.screen(Logger.Error, "Error al leer XML de zonning: " + file + ", Saliendo!");
@@ -1236,17 +1244,17 @@ public class XmlUtilsByModality {
 		}
 		return jdomDocZonning;
 	}
-	
+	//CAMBIO
 	private static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType){
 		return getChargesFile(modality, serviceType, false);
 	}
 
-	protected static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, boolean onlyFileName){
+	protected static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, Boolean onlyFileName){
 		return getChargesFile(modality, serviceType, onlyFileName,false);
 	}
 
 	protected static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, Boolean onlyFileName, Boolean mida) {
-		Map<String, Object> jdomDocCharging = jdomDocChargings.get(modality + "." + serviceType);
+		Map<String, Object> jdomDocCharging = jdomDocChargings.get(modality + "." + serviceType + "." + mida);
 		if (jdomDocCharging == null) {
 			jdomDocCharging = new HashMap<String, Object>();
 			String file = Parameters.XML_DB_DIR + Parameters.XML_CHARGES_TEL;
@@ -1281,7 +1289,7 @@ public class XmlUtilsByModality {
 					XMLEventReader reader = factory.createXMLEventReader(new FileReader(file));
 					StAXEventBuilder builder = new StAXEventBuilder();
 					jdomDocCharging.put(XmlUtilsByModality.DOCUMENT, builder.build(reader));
-					jdomDocChargings.put(modality + "." + serviceType, jdomDocCharging);
+					jdomDocChargings.put(modality + "." + serviceType + "." + mida, jdomDocCharging);
 				} catch (FileNotFoundException | XMLStreamException | JDOMException e) {
 					Logger.screen(Logger.Error, e.toString());
 					Logger.screen(Logger.Error, "Error al leer XML de charges Telephony: " + file + ", Saliendo!");

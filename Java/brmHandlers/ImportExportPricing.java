@@ -506,17 +506,20 @@ public class ImportExportPricing {
 		}
     	Logger.log(Logger.Debug, "ImportExportPricing.genItemSelectorBaseXml() - Fin");
     }
-    
+    //CAMBIO
     public static void genChargesBaseXml(boolean forced, Modality modality, ServiceType serviceType) {
-    	Logger.screen(Logger.Debug, "Generando configuraci\u00F3n base de Charges [" + serviceType + "," + modality + "]");
-    	Map<String, Object> jdomDocCharges = XmlUtilsByModality.getChargesFile(modality, serviceType, true);
+        genChargesBaseXml(forced,modality,serviceType,false);
+    }
+    public static void genChargesBaseXml(boolean forced, Modality modality, ServiceType serviceType,Boolean mida) {
+    	Logger.screen(Logger.Debug, "Generando configuraci\u00F3n base de Charges [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
+    	Map<String, Object> jdomDocCharges = XmlUtilsByModality.getChargesFile(modality, serviceType, true,mida);
     	
     	
     	File xmlZonningBase = new File((String) jdomDocCharges.get(XmlUtilsByModality.FILE));
     	if (xmlZonningBase.exists() && !forced) {
-    		String confirm = System.console().readLine("Existe ya un archivo de configuraci\u00F3n para Charges [" + serviceType + "," + modality + "], desea sobreescribirlo (si/no)?");
+    		String confirm = System.console().readLine("Existe ya un archivo de configuraci\u00F3n para Charges [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "], desea sobreescribirlo (si/no)?");
     		if (!confirm.toLowerCase().equals("si")) {
-    	    	Logger.screen(Logger.Error, "Se cancel\u00F3 la creaci\u00F3n de XML Charges [" + serviceType + "," + modality + "]");
+    	    	Logger.screen(Logger.Error, "Se cancel\u00F3 la creaci\u00F3n de XML Charges [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
     			return;
     		}
     	}
@@ -528,8 +531,9 @@ public class ImportExportPricing {
     	List<String> args = new ArrayList<String>();
     	args.add("CHARGE_RATE_PLAN");
     	args.add( "-n");
-    	if(serviceType.equals(ServiceType.TEL))
-    		args.add(modality.TEL.getPDCConfigCharges(modality));
+    	if(serviceType.equals(ServiceType.TEL)){
+    		args.add(modality.TEL.getPDCConfigCharges(modality,mida));
+        }
     	else
     		args.add(modality.SMS.getPDCConfigCharges(modality));
     	try {
@@ -539,24 +543,27 @@ public class ImportExportPricing {
 			if (!fileExport.renameTo(xmlZonningBase)) {
 				throw new ExceptionImportExportPricing("No se pudo mover el archivo generado!");
 			}
-    		Logger.log(Logger.Debug, "Configuraci\u00F3n de Charges [" + serviceType + "," + modality + "] generada");
+    		Logger.log(Logger.Debug, "Configuraci\u00F3n de Charges [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "] generada");
 		} catch (ExceptionImportExportPricing | InterruptedException e) {
             Logger.screen(Logger.Error, e.toString());
-            Logger.screen(Logger.Error, "Error al ejecutar ImportExportPricing en Charges [" + serviceType + "," + modality + "]");
+            Logger.screen(Logger.Error, "Error al ejecutar ImportExportPricing en Charges [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
             System.exit(Parameters.ERR_IOERROR);
 		}
     	Logger.log(Logger.Debug, "ImportExportPricing.genChargesBaseXml() - Fin");
     }
     
     public static void genZonningBaseXml(boolean forced, Modality modality, ServiceType serviceType) {
-    	Logger.screen(Logger.Debug, "Generando configuraci\u00F3n base de Zonning [" + serviceType + "," + modality + "]");
-    	Map<String, Object> jdomDocZonning = XmlUtilsByModality.getZoneFile(modality, serviceType, true);
+        genZonningBaseXml(forced,modality,serviceType,false);
+    }    
+    public static void genZonningBaseXml(boolean forced, Modality modality, ServiceType serviceType,Boolean mida) {
+    	Logger.screen(Logger.Debug, "Generando configuraci\u00F3n base de Zonning [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
+    	Map<String, Object> jdomDocZonning = XmlUtilsByModality.getZoneFile(modality, serviceType, true,mida);
     	
     	File xmlZonningBase = new File((String) jdomDocZonning.get(XmlUtilsByModality.FILE));
     	if (xmlZonningBase.exists() && !forced) {
-    		String confirm = System.console().readLine("Existe ya un archivo de configuraci\u00F3n para Zonning [" + serviceType + ", " + modality + "], desea sobreescribirlo (si/no)?");
+    		String confirm = System.console().readLine("Existe ya un archivo de configuraci\u00F3n para Zonning [" + serviceType + ", " + modality + ((mida)?",MIDA":"")+ "], desea sobreescribirlo (si/no)?");
     		if (!confirm.toLowerCase().equals("si")) {
-    	    	Logger.screen(Logger.Error, "Se cancel\u00F3 la creaci\u00F3n de XML Zonning [" + serviceType + "," + modality + "]");
+    	    	Logger.screen(Logger.Error, "Se cancel\u00F3 la creaci\u00F3n de XML Zonning [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
     			return;
     		}
     	}
@@ -569,7 +576,7 @@ public class ImportExportPricing {
     	args.add("STANDARD_ZONE_MODEL");
     	args.add( "-n");
     	if(serviceType.equals(ServiceType.TEL))
-    		args.add(ServiceType.TEL.getPDCConfigZonning(modality));
+    		args.add(ServiceType.TEL.getPDCConfigZonning(modality,mida));
     	else
     		args.add(ServiceType.SMS.getPDCConfigZonning(modality));
     	try {
@@ -579,10 +586,10 @@ public class ImportExportPricing {
 			if (!fileExport.renameTo(xmlZonningBase)) {
 				throw new ExceptionImportExportPricing("No se pudo mover el archivo generado!");
 			}
-    		Logger.log(Logger.Debug, "Configuraci\u00F3n de Zonning [" + serviceType + "," + modality + "] generada");
+    		Logger.log(Logger.Debug, "Configuraci\u00F3n de Zonning [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "] generada");
 		} catch (ExceptionImportExportPricing | InterruptedException e) {
             Logger.screen(Logger.Error, e.toString());
-            Logger.screen(Logger.Error, "Error al ejecutar ImportExportPricing en Zonning [" + serviceType + "," + modality + "]");
+            Logger.screen(Logger.Error, "Error al ejecutar ImportExportPricing en Zonning [" + serviceType + "," + modality + ((mida)?",MIDA":"")+ "]");
             System.exit(Parameters.ERR_IOERROR);
 		}
     	Logger.log(Logger.Debug, "ImportExportPricing.genZonningBaseXml() - Fin");

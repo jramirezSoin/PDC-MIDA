@@ -1,0 +1,91 @@
+Cambios hechos en Markmanager.jar
+
+brmHandlers:
+
+	ImportExportPricing.java
+		public static void genZonningBaseXml(boolean forced, Modality modality, ServiceType serviceType)
+		public static void genChargesBaseXml(boolean forced, Modality modality, ServiceType serviceType)
+
+	XmlUtils.java
+		public static boolean publishChanges(boolean force)
+
+	XmlUtilsByModality.java
+		public static boolean addPriceTier(Modality modality, ServiceType serviceType, PriceTier priceTier)
+		private static Element makeResultElement(Modality modality, ServiceType serviceType, String name, ...)
+		public static boolean addZoneItem(Modality modality, ServiceType serviceType, String zoneName, ...)
+		private static Element getPriceTierValidityPeriod(String date, List<PriceTierRange> listOfPriceTierRange, ResultName resultName)
+		public static boolean addPriceTierRange(Modality modality, ServiceType serviceType, PriceTier priceTier)
+		public static void addZoneResult(Modality modality, ServiceType serviceType, String zoneName, String rateType)
+		public static HashMap<String, List<ZoneItem>> getAllZoneItems(Modality modality, ServiceType serviceType)
+		protected static Boolean zonning(Boolean force, Modality modality, ServiceType serviceType)
+		protected static Boolean charging(Boolean force, Modality modality, ServiceType serviceType)
+		public static HashMap<String, PriceTier> getPriceTiers(Modality modality, ServiceType serviceType, String campaign)
+		protected static Map<String, Object> getZoneFile(Modality modality, ServiceType serviceType, Boolean onlyFileName)
+		protected static Map<String, Object> getChargesFile(Modality modality, ServiceType serviceType, Boolean onlyFileName)
+
+config:
+
+	Parameters.java
+		public static String PDC_CONFIG_ZONNING_TEL_PRE_MIDA="";
+	    public static String PDC_CONFIG_ZONNING_TEL_CCF_MIDA="";
+	    public static String PDC_CONFIG_ZONNING_TEL_CCM_MIDA="";
+	    public static String PDC_CONFIG_ZONNING_TEL_HIB_MIDA="";
+	    public static String PDC_CONFIG_CHARGES_TEL_PRE_MIDA="";
+	    public static String PDC_CONFIG_CHARGES_TEL_CCF_MIDA="";
+	    public static String PDC_CONFIG_CHARGES_TEL_CCM_MIDA="";
+	    public static String PDC_CONFIG_CHARGES_TEL_HIB_MIDA="";
+	    public static String XML_CONFIG_ZONNING_TEL_PRE_MIDA="";
+	    public static String XML_CONFIG_ZONNING_TEL_CCF_MIDA="";
+	    public static String XML_CONFIG_ZONNING_TEL_CCM_MIDA="";
+	    public static String XML_CONFIG_ZONNING_TEL_HIB_MIDA="";
+	    public static String XML_CONFIG_CHARGES_TEL_PRE_MIDA="";
+	    public static String XML_CONFIG_CHARGES_TEL_CCF_MIDA="";
+	    public static String XML_CONFIG_CHARGES_TEL_CCM_MIDA="";
+	    public static String XML_CONFIG_CHARGES_TEL_HIB_MIDA="";
+
+	    PDC_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("pdc.config.zonning.tel.pre.mida").trim();
+	    PDC_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("pdc.config.zonning.tel.ccf.mida").trim();
+	    PDC_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("pdc.config.zonning.tel.ccm.mida").trim();
+	    PDC_CONFIG_ZONNING_TEL_HIB_MIDA=confFile.getString("pdc.config.zonning.tel.hib.mida").trim();
+	    PDC_CONFIG_CHARGES_TEL_PRE_MIDA=confFile.getString("pdc.config.charges.tel.pre.mida").trim();
+	    PDC_CONFIG_CHARGES_TEL_CCF_MIDA=confFile.getString("pdc.config.charges.tel.ccf.mida").trim();
+	    PDC_CONFIG_CHARGES_TEL_CCM_MIDA=confFile.getString("pdc.config.charges.tel.ccm.mida").trim();
+	    PDC_CONFIG_CHARGES_TEL_HIB_MIDA=confFile.getString("pdc.config.charges.tel.hib.mida").trim();
+
+	    XML_CONFIG_ZONNING_TEL_PRE_MIDA=confFile.getString("xml.config.zonning.tel.pre.mida").trim();
+	    XML_CONFIG_ZONNING_TEL_CCF_MIDA=confFile.getString("xml.config.zonning.tel.ccf.mida").trim();
+	    XML_CONFIG_ZONNING_TEL_CCM_MIDA=confFile.getString("xml.config.zonning.tel.ccm.mida").trim();
+	    XML_CONFIG_ZONNING_TEL_HIB_MIDA=confFile.getString("xml.config.zonning.tel.hib.mida").trim();
+	    XML_CONFIG_CHARGES_TEL_PRE_MIDA=confFile.getString("xml.config.charges.tel.pre.mida").trim();
+	    XML_CONFIG_CHARGES_TEL_CCF_MIDA=confFile.getString("xml.config.charges.tel.ccf.mida").trim();
+	    XML_CONFIG_CHARGES_TEL_CCM_MIDA=confFile.getString("xml.config.charges.tel.ccm.mida").trim();
+	    XML_CONFIG_CHARGES_TEL_HIB_MIDA=confFile.getString("xml.config.charges.tel.hib.mida").trim();
+
+cust:
+
+	ServiceType.java
+		public String getPDCConfigCharges(Modality modality)
+		public String getPDCConfigZonning(Modality modality)
+
+	Modality.java
+		CCM(), CCF;  CREATED
+		case "CCF":
+			return Modality.CCF;
+		case "CCM":
+			return Modality.CCM;
+		public List<ResultName> getResultsNames(ServiceType serviceType)
+		public Boolean applyResultName(ResultName resultName)
+		PRE_IC_MIDA_XXXX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true,true, ""); CREATED
+		isCCFixed, isCCMobile, isMida;
+		this.isCCFixed = isCCFixed;
+		this.isCCMobile = isCCMobile;
+		this.isMida= isMida;
+
+markmanager:
+
+	AddMarkMida.java    CREATED
+	ModifyMarkMida.java CREATED
+	ReportMarkMida.java CREATED
+
+	InitialSetup.java
+		private static void mida() CREATED

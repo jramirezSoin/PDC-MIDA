@@ -50,17 +50,45 @@ public class ModifyMarkMIDA {
 		Statement stmt;
 		String destinationPrefix = args[1]; //USA_1
 		//String pais_code = args[2];
-		String validFrom = args[2] + "T000000";
+		String validFrom = args[2];
 		String price = args[3];
 		String priceAd = args[4];
-		String zoneName = "PRE_IC_MIDA_" + destinationPrefix;
+		String zoneName = "PRE_IC_MIDA_"+((modality.equals(Modality.CCF))?"FIJO_CC_":((modality.equals(Modality.CCM))?"MOVIL_CC_":""))+destinationPrefix;
 		String rateType="DUR";
 		Date today = new Date();
+		Double dPrice=0.0;
+		Double dPriceAd=0.0;
+		Date validFrom_DATE= new Date();
+		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat dfi = new SimpleDateFormat("yyyyMMdd");
 
         try {
 
-        	stmt = DBManager.getConnectionIfw().createStatement();
-			ResultSet destinsIfw;
+
+        	if(!destinationPrefix.matches("[A-Z]{3}[_][0-9]{1,}")){
+				Logger.screen(Logger.Error,"El codigo de destino debe ser XXX_# donde XXX es el nombre del pais en 3 digitos en mayuscula y # el codigo de pais");
+				System.exit(Parameters.ERR_INVALID_VALUE);
+			}
+
+        	try{
+				validFrom_DATE = DateFormater.stringToDate(validFrom, dfi);
+				if(!((dfi.format(validFrom_DATE)).equals(validFrom)))
+					throw new Exception();
+			}
+			catch(Exception e){
+				Logger.screen(Logger.Error,"La fecha ["+validFrom+"] ingresada es invalida");
+				System.exit(Parameters.ERR_INVALID_VALUE);
+			}
+			try{
+				dPrice = Double.parseDouble(price);
+				dPriceAd = Double.parseDouble(priceAd);
+			}
+			catch(Exception e){
+				Logger.screen(Logger.Error,"Los precios ingresados deben ser valores numericos");
+				System.exit(Parameters.ERR_INVALID_VALUE);
+			}
+
+
 
 
 			//Validar zoneName
@@ -70,32 +98,31 @@ public class ModifyMarkMIDA {
 			}
 
 			//validar validFrom >= a dia actual
-			Date validFrom_DATE = DateFormater.stringToDate(validFrom.replace("T", ""), new SimpleDateFormat("yyyyMMddHHmmss"));
-			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
 			if(validFrom_DATE.compareTo(today) <= 0){
 				Logger.screen(Logger.Error, "La fecha de inicio especificada debe ser posterior al dia actual (" + df.format(today) + ")");
 			}else{
 			//crear ZM y IC
 				Logger.onlyScreen("Inicio de modificacion");
-			    String glid = "1600200" + (modality.equals(Modality.HYBRID) ? "3":"1" );
+			    String glid = "16002003" + (modality.equals(Modality.HYBRID) ? "3":"1" );
 				List<PriceTierRange> listOfPriceTierRange = new ArrayList<PriceTierRange>();
 
 	    		if (rateType.equals("DUR")) {
-		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", null, Double.parseDouble(price), "MINUTES", 60.0, glid));
-		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", null, Double.parseDouble(priceAd), "MINUTES", 1.0, glid));
+		    	listOfPriceTierRange.add(new PriceTierRange("60", "840", null, dPrice, "MINUTES", 60.0, glid));
+		    	listOfPriceTierRange.add(new PriceTierRange("NO_MAX", "840", null, dPriceAd, "MINUTES", 1.0, glid));
 	    		}
 	    	
 	    		HashMap<String, List<PriceTierRange>> mapPriceTierRange = new HashMap<String, List<PriceTierRange>>();
 	    		mapPriceTierRange.put(validFrom, listOfPriceTierRange);
 				HashMap<String, PriceTier> priceTiers= XmlUtilsByModality.getPriceTiers(modality, ServiceType.TEL, destinationPrefix, true);
-           
+            Boolean updated=false;
             if(priceTiers.size()==0)
-            	Logger.onlyScreen("No existe priceTiers para la marcacion actual");
+            	Logger.onlyScreen("No existe priceTiers para la marcacion actual, utilice el metodo de creacion respectivo.");
             else
-            	XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier(zoneName, mapPriceTierRange, rateType),null,true, true);
+            	updated=XmlUtilsByModality.addPriceTierRange(modality, ServiceType.TEL, new PriceTier(zoneName, mapPriceTierRange, rateType),null,true, true);
+            if(updated) Logger.screen(Logger.Debug,"Tarifa ingresada satisfactoriamente");
+			else Logger.screen(Logger.Error,"Error al ingresar la tarifa");
 		    }
-		} catch (SQLException e) {
+		} catch (Exception e) {
             Logger.screen(Logger.Error, e.toString());
             e.printStackTrace();
             Logger.screen(Logger.Error, "Error en conexi\u00F3, Saliendo!");

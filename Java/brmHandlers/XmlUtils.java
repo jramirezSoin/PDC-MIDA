@@ -2057,6 +2057,7 @@ public class XmlUtils {
 		boolean changesChargesHibTel = false;
 		boolean changesChargesHibSms = false;
 		boolean changesChargesHibHorTel = false;
+		//CAMBIO
 		boolean changesChargesPreMida = false;
 		boolean changesChargesHibMida = false;
 		boolean changesChargesCCFMida = false;
@@ -2473,10 +2474,11 @@ public class XmlUtils {
 			changesChargesHibTel = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.TEL);
 			changesChargesHibSms = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.SMS);
 			changesChargesHibHorTel = XmlUtilsByModality.charging(force, Modality.HORARY, ServiceType.TEL);
+			//CAMBIO
 			changesChargesPreMida = XmlUtilsByModality.charging(force, Modality.PREPAID, ServiceType.TEL,true);
 			changesChargesHibMida = XmlUtilsByModality.charging(force, Modality.HYBRID, ServiceType.TEL,true);
 			changesChargesCCFMida = XmlUtilsByModality.charging(force, Modality.CCF, ServiceType.TEL,true);
-			changesChargesCCMMida = XmlUtilsByModality.charging(force, Modality.HORARY, ServiceType.TEL,true);
+			changesChargesCCMMida = XmlUtilsByModality.charging(force, Modality.CCM, ServiceType.TEL,true);
 			
 			
 
@@ -2496,6 +2498,7 @@ public class XmlUtils {
 			System.exit(Parameters.ERR_IOERROR);
 		}
 		Logger.log(Logger.Debug, "publishChanges() - Fin");
+		//CAMBIO
 		return changesZonning || changesChargesSms || changesChargesTel || changesItemsSms || changesItemsTel || changesChargesTelUsd
 				|| changesZonningPreSms || changesZonningPreTel || changesZonningHibSms || changesZonningHibTel
 				|| changesChargesPreTel || changesChargesPreSms || changesChargesHibTel || changesChargesHibSms

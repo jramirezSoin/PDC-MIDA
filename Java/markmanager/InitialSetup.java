@@ -45,6 +45,9 @@ public class InitialSetup {
         case "-horary":
         	horary();
         	break;
+        case "-mida":
+            mida();
+            break;    
         case "-all":
         	ImportExportPricing.genZoneResultConfigurationXml(false);
         	ImportExportPricing.genZonningBaseXml(false);
@@ -60,6 +63,7 @@ public class InitialSetup {
         	prepaid();
         	hybrid();
         	horary();
+            mida();
         	break;
         case "-prices":
         	prices();
@@ -109,5 +113,20 @@ public class InitialSetup {
     	//ImportExportPricing.genItemSelectorBaseXml(false, Modality.PREPAID, ServiceType.TEL);
     	//ImportExportPricing.genItemSelectorBaseXml(false, Modality.PREPAID, ServiceType.SMS);
 	}
+
+    private static void mida() {
+        ImportExportPricing.genZoneResultConfigurationXml(false);
+        ImportExportPricing.genZonningBaseXml(false, Modality.PREPAID, ServiceType.TEL,true);
+        ImportExportPricing.genZonningBaseXml(false, Modality.HYBRID, ServiceType.TEL,true);
+        ImportExportPricing.genZonningBaseXml(false, Modality.CCM, ServiceType.TEL,true);
+        ImportExportPricing.genZonningBaseXml(false, Modality.CCF, ServiceType.TEL,true);
+        ImportExportPricing.genChargesBaseXml(false, Modality.PREPAID, ServiceType.TEL,true);
+        ImportExportPricing.genChargesBaseXml(false, Modality.HYBRID, ServiceType.TEL,true);
+        ImportExportPricing.genChargesBaseXml(false, Modality.CCM, ServiceType.TEL,true);
+        ImportExportPricing.genChargesBaseXml(false, Modality.CCF, ServiceType.TEL,true);
+        //TODO validar si se debe aplicar, se requieren datos del properties
+        //ImportExportPricing.genItemSelectorBaseXml(false, Modality.PREPAID, ServiceType.TEL);
+        //ImportExportPricing.genItemSelectorBaseXml(false, Modality.PREPAID, ServiceType.SMS);
+    }
 
 }

@@ -8,7 +8,7 @@ import java.util.List;
  * @autor Roger Masis
  */
 public enum Modality {
-
+	//CAMBIO
 	POSPAID(), PREPAID(), HYBRID(), HORARY(), CCM(), CCF;
 
 	public ServiceType SMS, TEL;
@@ -22,7 +22,7 @@ public enum Modality {
 
 	private Modality() {
 	}
-	
+	//CAMBIO
 	public static Modality getModality(String code) {
 		switch (code.toUpperCase()) {
 		case "PRE":
@@ -46,7 +46,7 @@ public enum Modality {
 	public List<ResultName> getResultsNames(ServiceType serviceType) {
 		return getResultsNames(serviceType,false);
 	}
-	
+	//CAMBIO
 	public List<ResultName> getResultsNames(ServiceType serviceType, Boolean mida) {
 		List<ResultName> listOfResultName = new LinkedList<Modality.ResultName>();
 		for (ResultName resultName : ResultName.class.getEnumConstants()) {
@@ -69,7 +69,7 @@ public enum Modality {
 		}
 		return listOfResultName;
 	}
-	
+	//CAMBIO
 	public Boolean applyResultName(ResultName resultName) {
 		if(this.equals(Modality.POSPAID) && resultName.isPospaid)
 			return true;
@@ -94,9 +94,11 @@ public enum Modality {
 		//SMS
 		PRE_IC_E_SXXXXMT("05", "TelcoGsmSms", false, true, true, false, false, true,false,false,false, "MT"), 
 		PRE_IC_E_SXXXXMO("04", "TelcoGsmSms", false, true, true, false, false, true,false,false,false, "MO"),
-		//MIDA
-		PRE_IC_MIDA_XXXX("02", "TelcoGsmTelephony", false, true, true, false, true, false,true,true,true, "");
-		
+		//MIDA CAMBIO
+		PRE_IC_MIDA_XXXX("02", "TelcoGsmTelephony", false, true, true, false, true, false,false,false,true, ""),
+		PRE_IC_MIDA_FIJO_CC_XXXX("07", "TelcoGsmTelephony", false, false, false, false, true, false,true,false,true, ""),
+		PRE_IC_MIDA_MOVIL_CC_XXXX("08", "TelcoGsmTelephony", false, false, false, false, true, false,false,true,true, "");
+		//CAMBIO
 		public String originPrefix, productName, group;
 		public Boolean isPospaid, isPrepaid, isHybrid, isTel, isSms, isHorary, isCCFixed, isCCMobile, isMida;
 

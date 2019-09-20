@@ -30,7 +30,7 @@
                 <zoneModel>
                     <zoneModelName>PRE_ZM_VOZ_CALLING_CARD_FIJO</zoneModelName>
                     <results>
-                        <name>PRE_IC_MIDA_CMR_237</name>
+                        <name>PRE_IC_MIDA_FIJO_CC_CMR_237</name>
                        <crpCompositePopModel>
                             <name>Precios</name>
                             <usageChargePopModel>
@@ -78,7 +78,7 @@
                         </crpCompositePopModel>
                     </results>
                     <results>
-                        <name>PRE_IC_MIDA_COM_269</name>
+                        <name>PRE_IC_MIDA_FIJO_CC_COM_269</name>
                        <crpCompositePopModel>
                             <name>Precios</name>
                             <usageChargePopModel>
@@ -126,7 +126,7 @@
                         </crpCompositePopModel>
                     </results>
                     <results>
-                        <name>PRE_IC_MIDA_CZE_420</name>
+                        <name>PRE_IC_MIDA_FIJO_CC_CZE_420</name>
                        <crpCompositePopModel>
                             <name>Precios</name>
                             <usageChargePopModel>
@@ -174,7 +174,7 @@
                         </crpCompositePopModel>
                     </results>
                     <results>
-                        <name>PRE_IC_MIDA_DZA_214</name>
+                        <name>PRE_IC_MIDA_FIJO_CC_DZA_214</name>
                        <crpCompositePopModel>
                             <name>Precios</name>
                             <usageChargePopModel>

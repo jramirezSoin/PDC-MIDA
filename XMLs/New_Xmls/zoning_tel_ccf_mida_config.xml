@@ -5,42 +5,42 @@
     <obsolete>false</obsolete>
       <zoneItem>
         <productName>TelcoGsmTelephony</productName>
-        <originPrefix>02</originPrefix>
+        <originPrefix>07</originPrefix>
         <destinationPrefix>00237</destinationPrefix>
         <validFrom>20190829T000000</validFrom>
         <validTo>inf</validTo>
         <zoneResult>
-            <zoneName>PRE_IC_MIDA_CMR_237</zoneName>
+            <zoneName>PRE_IC_MIDA_FIJO_CC_CMR_237</zoneName>
         </zoneResult>
     </zoneItem>
       <zoneItem>
         <productName>TelcoGsmTelephony</productName>
-        <originPrefix>02</originPrefix>
+        <originPrefix>07</originPrefix>
         <destinationPrefix>00269</destinationPrefix>
         <validFrom>20190829T000000</validFrom>
         <validTo>inf</validTo>
         <zoneResult>
-            <zoneName>PRE_IC_MIDA_COM_269</zoneName>
+            <zoneName>PRE_IC_MIDA_FIJO_CC_COM_269</zoneName>
         </zoneResult>
     </zoneItem>
       <zoneItem>
         <productName>TelcoGsmTelephony</productName>
-        <originPrefix>02</originPrefix>
+        <originPrefix>07</originPrefix>
         <destinationPrefix>00420</destinationPrefix>
         <validFrom>20190829T000000</validFrom>
         <validTo>inf</validTo>
         <zoneResult>
-            <zoneName>PRE_IC_MIDA_CZE_420</zoneName>
+            <zoneName>PRE_IC_MIDA_FIJO_CC_CZE_420</zoneName>
         </zoneResult>
     </zoneItem>
       <zoneItem>
         <productName>TelcoGsmTelephony</productName>
-        <originPrefix>02</originPrefix>
+        <originPrefix>07</originPrefix>
         <destinationPrefix>00214</destinationPrefix>
         <validFrom>20190829T000000</validFrom>
         <validTo>inf</validTo>
         <zoneResult>
-            <zoneName>PRE_IC_MIDA_DZA_214</zoneName>
+            <zoneName>PRE_IC_MIDA_FIJO_CC_DZA_214</zoneName>
         </zoneResult>
     </zoneItem>
 </standardZoneModel></cim:ConfigObjects>
